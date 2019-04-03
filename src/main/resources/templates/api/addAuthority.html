@@ -1,0 +1,66 @@
+<!DOCTYPE HTML>
+<!--
+/*
+ * jQuery File Upload Plugin Demo
+ * https://github.com/blueimp/jQuery-File-Upload
+ *
+ * Copyright 2010, Sebastian Tschan
+ * https://blueimp.net
+ *
+ * Licensed under the MIT license:
+ * https://opensource.org/licenses/MIT
+ */
+-->
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+
+	<head>
+		<meta charset="utf-8">
+		<title>添加角色</title>
+		<meta name="description" content="File Upload widget with multiple file selection, drag&amp;drop support, progress bars, validation and preview images, audio and video for jQuery. Supports cross-domain, chunked and resumable file uploads and client-side image resizing. Works with any server-side platform (PHP, Python, Ruby on Rails, Java, Node.js, Go etc.) that supports standard HTML form file uploads.">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <!--CSRF-->
+        <meta name="_csrf" th:content="${_csrf.token}"/>
+        <!-- default header name is X-CSRF-TOKEN -->
+        <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+        <!--favicon图标-->
+        <link rel="icon" href="/favicon.ico">
+        <!--semantic.css-->
+        <link rel="stylesheet" href="/semantic/semantic.min.css" th:href="@{/semantic/semantic.min.css}" /><title>云智学习</title>
+        <!--layui.css-->
+        <link rel="stylesheet" href="/layui/css/layui.css" th:href="@{/layui/css/layui.css}">
+
+	</head>
+	<body>
+		<!--header-->
+		<div th:replace="~{fragments/header::header}"></div>
+		<!--content-->
+        <!--引入semantic，解决边框-->
+        <div class="ui card center" style="margin-top: 10%;margin-left: 25%;margin-right: 25%;margin-bottom: 10%;width: 50%">
+            <div class="content">
+                <div class="header">添加角色</div>
+            </div>
+            <div class="content">
+                <!--th:action="@{/api/image/save}"改成ajax上传-->
+                <form class="layui-form layui-form-pane" method="post" >
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">角色名字</label>
+                        <div class="layui-input-inline">
+                            <input type="text" name="name" lay-verify="required" placeholder="请输入角色名字(大写)" autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <div class="layui-input-block">
+                            <button class="layui-btn" lay-submit="" lay-filter="submitdocument" id="addAuthority">立即提交</button>
+                            <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!--footer-->
+        <div th:replace="~{/fragments/footer::footer}"></div><!--自定义js-->
+        <script src="/js/custom/api/addAuthority.js" th:src="@{/js/custom/api/addAuthority.js}" type="text/javascript"></script>
+    </body>
+</html>

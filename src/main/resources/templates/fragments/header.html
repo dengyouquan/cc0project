@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head>
+    <!-- Standard Meta -->
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
+    <title>Header</title>
+</head>
+<body>
+<div class="ui fixed inverted menu" data-th-fragment="header">
+    <!--菜单-->
+    <div class="ui simple dropdown item"><i class="content icon"></i>菜单
+        <div class="menu">
+            <div class="ui left pointing dropdown link item">声音
+                <div class="menu">
+                    <a class="item" href="/musics">音乐</a>
+                    <a class="item" href="/sounds">音效</a>
+                </div>
+            </div>
+            <div class="ui left pointing dropdown link item">游戏
+                <div class="menu">
+                    <a class="item" href="/games/3d">3d</a>
+                    <a class="item" href="/games/2d">2d</a>
+                    <a class="item" href="/games/texture">贴图</a>
+                </div>
+            </div>
+            <a class="item" href="/images">图片</a>
+            <a class="item" href="/videos">视频</a>
+            <!--admin-->
+            <div sec:authorize ifAllGranted='ROLE_ADMIN'>
+                <a class="item" href="/users" th:action="@{/users}">控制台</a>
+            </div>
+        </div>
+    </div>
+    <!--logo-->
+    <a href="/index" class="header item">
+        <img class="logo" src="/favicon.ico"> CC0资源
+    </a>
+    <div class="right menu">
+        <!--<div class="item">
+            <div class="ui transparent inverted icon input">
+                <i class="search icon"></i>
+                <input type="text" placeholder="Search">
+            </div>
+        </div>-->
+        <!--搜索框-->
+        <div class="item">
+            <div class="ui action left icon input">
+                <i class="search icon"></i>
+                <input id="searchText" type="text" placeholder="Search">
+                <button id="searchButton" class="ui button">Submit</button>
+            </div>
+        </div>
+        <!--个人信息-->
+        <div sec:authorize="isAuthenticated()" class="item right">
+            <div class="ui simple dropdown" style="padding-right: 20px">
+                个人信息 <i class="dropdown icon"></i>
+                <div class="menu">
+                    <a class="item" href="/userspace" th:action="@{/userspace}">账号信息</a>
+                    <a  class="item uploadcourse" href="/api/image/add" th:action="@{/api/image/add}">上传图片</a>
+                </div>
+            </div>
+            <div>
+                <form action="/logout" th:action="@{/logout}" method="post">
+                    <button class="ui primary button logout">退出</button>
+                </form>
+            </div>
+        </div>
+        <!--登录，注册-->
+        <div sec:authorize="isAnonymous()" class="item">
+            <a class="ui primary button userlogin">登录 </a>
+        </div>
+        <div sec:authorize="isAnonymous()" class="item">
+            <a class="ui button userreg" href="/users/add">注册 </a>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
