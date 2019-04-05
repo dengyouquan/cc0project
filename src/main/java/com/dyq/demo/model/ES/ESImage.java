@@ -21,15 +21,15 @@ import java.util.Date;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-@Document(indexName = "image", type = "image")
+@Document(indexName = "cc0", type = "image")
 public class ESImage implements Serializable {
     @Id  // 主键
     private String id;
-    @Field(index = false,type = FieldType.Long)
+    @Field(index = false, type = FieldType.Long)
     private Long esdocumentId;
-    @Field(index = false,type = FieldType.Date)  // 不做全文检索字段
+    @Field(index = false, type = FieldType.Date)  // 不做全文检索字段
     private Date createdAt;
-    @Field(index = false,type = FieldType.Date)  // 不做全文检索字段
+    @Field(index = false, type = FieldType.Date)  // 不做全文检索字段
     private Date updatedAt;
     //@Field(index = false,type = FieldType.text)
     private String fileName;
@@ -39,10 +39,10 @@ public class ESImage implements Serializable {
     private String fileSize;
     private String type;
     private String tags;
-    @Field(index = false,type = FieldType.Long)
+    @Field(index = false, type = FieldType.Long)
     private Long userId;
 
-    public ESImage(Image image){
+    public ESImage(Image image) {
         this.esdocumentId = image.getId();
         this.createdAt = image.getCreatedAt();
         this.updatedAt = image.getUpdatedAt();
@@ -55,7 +55,7 @@ public class ESImage implements Serializable {
         this.tags = image.getTags();
     }
 
-    public void update(Image image){
+    public void update(Image image) {
         this.esdocumentId = image.getId();
         this.createdAt = image.getCreatedAt();
         this.updatedAt = image.getUpdatedAt();

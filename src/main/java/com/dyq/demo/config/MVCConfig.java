@@ -19,30 +19,30 @@ public class MVCConfig implements WebMvcConfigurer {
 
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         //自定义静态资源映射目录 static可以不用映射
-        registry.addResourceHandler("/**").addResourceLocations("classpath:/static/");
+        //registry.addResourceHandler("/**").addResourceLocations("classpath:/static/");
     }
 
     public void addViewControllers(ViewControllerRegistry registry) {
-        registry.addViewController("/").setViewName("/index");
+        registry.addViewController("/").setViewName("index");
         registry.addViewController("/index").setViewName("index");
         registry.addViewController("/course").setViewName("course");
-        registry.addViewController("/course/main").setViewName("/coursedetail");
-        registry.addViewController("/course/study").setViewName("/courseLearn");
-        registry.addViewController("/course/list").setViewName("/courses");
+        registry.addViewController("/course/main").setViewName("coursedetail");
+        registry.addViewController("/course/study").setViewName("courseLearn");
+        registry.addViewController("/course/list").setViewName("courses");
         //登录视图映射
-        //registry.addViewController("/api/login").setViewName("/login/login");
-        registry.addViewController("/login/reg").setViewName("/login/reg");
-        registry.addViewController("/login/getpwd").setViewName("/login/getpwd");
-        registry.addViewController("/login/protocol").setViewName("/login/protocol");
+        //registry.addViewController("/api/login").setViewName("login/login");
+        registry.addViewController("/login/reg").setViewName("login/reg");
+        registry.addViewController("/login/getpwd").setViewName("login/getpwd");
+        registry.addViewController("/login/protocol").setViewName("login/protocol");
         //api视图映射
-        registry.addViewController("/api/image").setViewName("/api/image");
-        registry.addViewController("/api/image/add").setViewName("/uploadimage");
-        registry.addViewController("/api/authority").setViewName("/api/authority");
-        registry.addViewController("/api/authority/add").setViewName("/addAuthority");
-        registry.addViewController("/api/user").setViewName("/api/user");
-        registry.addViewController("/api/user/add").setViewName("/addUser");
+        registry.addViewController("/api/image").setViewName("api/image");
+        registry.addViewController("/api/image/add").setViewName("uploadimage");
+        registry.addViewController("/api/authority").setViewName("api/authority");
+        registry.addViewController("/api/authority/add").setViewName("addAuthority");
+        registry.addViewController("/api/user").setViewName("api/user");
+        registry.addViewController("/api/user/add").setViewName("addUser");
 
-        registry.addViewController("/search/image").setViewName("/search/image");
+        registry.addViewController("/search/image").setViewName("search/image");
     }
 
 
