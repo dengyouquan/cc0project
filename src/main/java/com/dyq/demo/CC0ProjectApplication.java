@@ -1,6 +1,7 @@
 package com.dyq.demo;
 
 import com.github.tobato.fastdfs.FdfsClientConfig;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.EnableMBeanExport;
 import org.springframework.context.annotation.Import;
 import org.springframework.jmx.support.RegistrationPolicy;

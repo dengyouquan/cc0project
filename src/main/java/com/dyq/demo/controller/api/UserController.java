@@ -7,7 +7,9 @@ import com.dyq.demo.vo.Response;
 import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
@@ -27,13 +29,13 @@ public class UserController {
     private UserService userService;
 
     @RequestMapping("list")
-    public ResponseEntity<Response> getAll(@RequestParam(value="page",required=false,defaultValue="1") int pageIndex,
-                                 @RequestParam(value="limit",required=false,defaultValue="10") int pageSize){
-        List<User> userList = userService.findAll(pageIndex,pageSize);
+    public ResponseEntity<Response> getAll(@RequestParam(value = "page", required = false, defaultValue = "1") int pageIndex,
+                                           @RequestParam(value = "limit", required = false, defaultValue = "10") int pageSize) {
+        List<User> userList = userService.findAll(pageIndex, pageSize);
         // todo 可以通过pageHelper的PageInfo得到总数量
         int userNum = userService.getCount();
-        System.out.println("userNum:"+userNum);
-        return ResponseEntity.ok().body(new Response(0,"用户列表",userNum,userList));
+        System.out.println("userNum:" + userNum);
+        return ResponseEntity.ok().body(new Response(0, "用户列表", userNum, userList));
 
     }
 
@@ -53,16 +55,16 @@ public class UserController {
     @DeleteMapping(value = "/{id}")
     public ResponseEntity<Response> delete(@PathVariable Long id) {
         User user = userService.findById(id);
-        System.out.println("删除用户："+id);
+        System.out.println("删除用户：" + id);
         userService.remove(id);
-        return ResponseEntity.ok().body(new Response(0,"删除成功",0,null));
+        return ResponseEntity.ok().body(new Response(0, "删除成功", 0, null));
     }
 
     @RequestMapping(value = "/save", method = RequestMethod.POST)
     public ResponseEntity<Response> save(User user) {
         String msg = user.getId() == null ? "新增成功!" : "更新成功!";
         User updateUser = null;
-        if(user.getId()!=null){
+        if (user.getId() != null) {
             updateUser = userService.findById(user.getId());
             updateUser.setAvatar(user.getAvatar());
             updateUser.setEmail(user.getEmail());
@@ -73,12 +75,12 @@ public class UserController {
             updateUser.setSex(0);
             updateUser.setUpdatedAt(new Date());
             user = updateUser;
-        }else {
+        } else {
             //新增
             user.setSex(0);
         }
-        System.out.println("user:"+user);
+        System.out.println("user:" + user);
         userService.save(user);
-        return ResponseEntity.ok().body(new Response(0,msg,0,null));
+        return ResponseEntity.ok().body(new Response(0, msg, 0, null));
     }
 }

@@ -1,0 +1,14 @@
+/*CSS3实现鼠标移动到图片上图片变大*/
+img {
+    -moz-transition: all 0.3s cubic-bezier(0, 0.5, 0.5, 1) 0s;
+    -o-transition: all 0.3s cubic-bezier(0, 0.5, 0.5, 1) 0s;
+    -webkit-transition: all 0.3s cubic-bezier(0, 0.5, 0.5, 1) 0s;
+    transition: all 0.3s cubic-bezier(0, 0.5, 0.5, 1) 0s;
+}
+img:hover{
+    transform: scale(1.1);
+    filter:alpha(opacity:50); opacity:0.5;  -moz-opacity:0.5;
+}
+.image{
+    overflow: hidden;/*图片放大多余的会隐藏，不会显示*/
+}

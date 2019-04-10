@@ -15,7 +15,7 @@ public class Image extends BaseModel {
      * elasticsearch ID
      */
     @Column(name = "e_id")
-    private Byte eId;
+    private Long eId;
     @Column(name = "file_name")
     private String fileName;
     private String description;
@@ -29,6 +29,7 @@ public class Image extends BaseModel {
     private String tags;
     @Column(name = "user_id")
     private Long userId;
+    private Integer status;
 
     public Image(){
         setUpdatedAt(new Date());

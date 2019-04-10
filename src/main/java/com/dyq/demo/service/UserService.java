@@ -12,8 +12,16 @@ import java.util.Optional;
 
 public interface UserService extends BaseModelService<User> {
     int getCount();
+
     User findByTel(String tel);
+
     User findByEmail(String email);
+
     User findByUsername(String username);
+
+    User findByUsernameOrEmailOrPhone(String username);
+
+    User getUserByPrincipal();
+
     List<Authority> findAuthoritysById(Long id);
 }

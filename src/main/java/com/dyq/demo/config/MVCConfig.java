@@ -36,13 +36,17 @@ public class MVCConfig implements WebMvcConfigurer {
         registry.addViewController("/login/protocol").setViewName("login/protocol");
         //api视图映射
         registry.addViewController("/api/image").setViewName("api/image");
+        registry.addViewController("/images").setViewName("images");
         registry.addViewController("/api/image/add").setViewName("uploadimage");
+        registry.addViewController("/api/resource").setViewName("api/resource");
+        registry.addViewController("/api/resource/add").setViewName("uploadresource");
         registry.addViewController("/api/authority").setViewName("api/authority");
         registry.addViewController("/api/authority/add").setViewName("addAuthority");
         registry.addViewController("/api/user").setViewName("api/user");
         registry.addViewController("/api/user/add").setViewName("addUser");
 
         registry.addViewController("/search/image").setViewName("search/image");
+        registry.addViewController("/error").setViewName("error");
     }
 
 

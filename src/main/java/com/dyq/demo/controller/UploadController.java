@@ -17,14 +17,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.UnsupportedEncodingException;
-import java.util.List;
 
-/**
- * CreatedDate:2018/6/4
- * Author:dyq
- */
 @Controller
+@RequestMapping("/services/resource")
 public class UploadController {
     @Autowired
     UserService userService;
@@ -36,15 +31,16 @@ public class UploadController {
     private ImageService imageService;
 
     // 上传文件
-    @RequestMapping(value = "/upload/image", method = RequestMethod.POST)
+    @PostMapping
     public ResponseEntity<Response> upload(MultipartFile file, HttpServletRequest request, HttpServletResponse response) throws Exception {
         String fileUrl = dfsClient.uploadFile(file);
-        int size = (int)file.getSize()/1024;//KB
-        System.out.println("size:"+size);
-        return ResponseEntity.ok().body(new Response(0,"上传成功",size,fileUrl));
+        int size = (int) file.getSize() / 1024;//KB
+        System.out.println("size:" + size);
+        return ResponseEntity.ok().body(new Response(0, "上传成功", size, fileUrl));
     }
+
     // 下载文件
-    @GetMapping(value = "/download/image/{id}")
+    @GetMapping(value = "/{id}")
     public ResponseEntity<byte[]> download(@PathVariable Long id) {
         Image image = imageService.findById(id);
         String fileUrl = image.getFilePath();
@@ -53,8 +49,8 @@ public class UploadController {
         HttpHeaders headers = new HttpHeaders();
         try {
             //TODO 下载文件时点X，不能再次下下载
-            content =dfsClient.downloadFile(fileUrl);
-            headers.setContentDispositionFormData("attachment",  new String(fileName.getBytes("UTF-8"),"iso-8859-1"));
+            content = dfsClient.downloadFile(fileUrl);
+            headers.setContentDispositionFormData("attachment", new String(fileName.getBytes("UTF-8"), "iso-8859-1"));
             headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
         } catch (Exception e) {
             e.printStackTrace();
@@ -62,42 +58,44 @@ public class UploadController {
         return new ResponseEntity<byte[]>(content, headers, HttpStatus.CREATED);
     }
 
-    @RequestMapping(value = "/upload/delete/image")
-    public ResponseEntity<Response> delete() throws Exception {
-        String fileUrl = "http://118.89.163.211:81/M00/00/00/rBEABlsWg-mAQBKDAAAXaU7Mr6E761.jpg";
+    @DeleteMapping(value = "/{id}")
+    public ResponseEntity<Response> delete(@PathVariable Long id) throws Exception {
+        //String fileUrl = "http://118.89.163.211:81/M00/00/00/rBEABlsWg-mAQBKDAAAXaU7Mr6E761.jpg";
+        Image image = imageService.findById(id);
+        String fileUrl = image.getFilePath();
         dfsClient.deleteFile(fileUrl);
-        return ResponseEntity.ok().body(new Response(0,"删除成功",0,fileUrl));
+        return ResponseEntity.ok().body(new Response(0, "删除成功", 0, fileUrl));
     }
 
     //处理文件上传
-    @PostMapping("/uploadfile")
+    @PostMapping("/upload")
     public ResponseEntity<Response> uploadfile(@RequestParam("file") MultipartFile file,
                                                HttpServletRequest request) {
         String contentType = file.getContentType();
         String fileName = getFileName(file);
         System.out.println("fileName-->" + fileName);
         System.out.println("getContentType-->" + contentType);
-        String filePath=request.getSession().getServletContext().getRealPath("/file/");
+        String filePath = request.getSession().getServletContext().getRealPath("/file/");
         try {
             FileUtil.uploadFile(file.getBytes(), filePath, fileName);
         } catch (Exception e) {
             // TODO: handle exception
         }
         //返回json
-        System.out.println("/file/"+fileName);
-        return ResponseEntity.ok().body(new Response(0,"",0,"/file/"+fileName));
+        System.out.println("/file/" + fileName);
+        return ResponseEntity.ok().body(new Response(0, "", 0, "/file/" + fileName));
     }
 
-    private String getFileName(MultipartFile file){
+    private String getFileName(MultipartFile file) {
         long l = System.currentTimeMillis();
         String s = Long.toString(l);
-        if(s.length()>7)
-            s = s.substring(s.length()-7, s.length());
+        if (s.length() > 7)
+            s = s.substring(s.length() - 7, s.length());
         else
-            s = s+s;
+            s = s + s;
         String fileName = file.getOriginalFilename();
-        fileName = fileName +s +"-"+file.getOriginalFilename();
-        System.out.println("fileName:"+fileName);
+        fileName = fileName + s + "-" + file.getOriginalFilename();
+        System.out.println("fileName:" + fileName);
         /*//上传
         file.transferTo(new File(path));
         path = path.split("GameDemo")[1];

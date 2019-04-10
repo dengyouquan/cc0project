@@ -1,15 +1,7 @@
 package com.dyq.demo.model;
 
-import com.dyq.demo.controller.api.UserController;
-import com.dyq.demo.repository.UserRepository;
-import com.dyq.demo.service.UserService;
-import com.dyq.demo.service.UserServiceImpl;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
-import org.apache.ibatis.annotations.Result;
-import org.apache.ibatis.annotations.Results;
-import org.apache.ibatis.annotations.Select;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -38,6 +30,10 @@ public class User extends BaseModel implements UserDetails {
     private String username;
     @Column(name = "account_non_locked")
     private Boolean accountNonLocked = true;
+    @Transient
+    private Boolean accountNonExpired = true;
+    @Transient
+    private Boolean credentialsNonExpired = true;
     private Boolean enable = true;
     //不JSON序列化年龄属性
     @JsonIgnore

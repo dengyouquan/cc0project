@@ -60,7 +60,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         return new BCryptPasswordEncoder();
     }
     */
-   //Encoded password does not look like BCrypt
+    //Encoded password does not look like BCrypt
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.headers().frameOptions().disable();
@@ -68,11 +68,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers(
                         //URL
-                        "/**","/login/**","/check/**","/register/**","/index",
-                        "/api/**","/download/**","/search/**"
+                        "/login/**", "/check/**", "/register/**", "/index",
+                        "/services/**", "/api/**", "/search/**"
                         //static
-                        ,"/css/**","/js/**","/layui/**","/layer/**", "/semantic/**","/images/**",
-                        "/favicon.ico","/font/**", "/login/**","/video/**","/videojs/**").permitAll()
+                        , "/css/**", "/js/**", "/layui/**", "/layer/**", "/semantic/**", "/images/**",
+                        "/favicon.ico", "/font/**", "/login/**", "/video/**", "/videojs/**").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .formLogin()
@@ -100,9 +100,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .key("www.dengyouquan.cn")
                 .rememberMeCookieName("cc0project")
                 .and()
-                .csrf().ignoringAntMatchers("/h2-console/**","/upload/image","/uploadfile")
+                //上传接口不知道怎么加token
+                .csrf().ignoringAntMatchers("/h2-console/**", "/upload/image", "/uploadfile","/services/**")
                 .and()
-        //只允许一个用户登录,如果同一个账户两次登录,那么第一个账户将被踢下线,跳转到登录页面
+                //只允许一个用户登录,如果同一个账户两次登录,那么第一个账户将被踢下线,跳转到登录页面
                 .sessionManagement().maximumSessions(1).expiredUrl("/login");
     }
 
