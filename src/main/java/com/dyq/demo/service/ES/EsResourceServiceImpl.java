@@ -37,7 +37,7 @@ public class EsResourceServiceImpl implements ESResourceService {
 
     @Override
     public List<ESResource> findAll(Integer pageNum, Integer pageSize) {
-        PageRequest pageable = PageRequest.of(pageNum, pageSize);
+        PageRequest pageable = PageRequest.of(pageNum - 1, pageSize);
         return esResourceRepository.findAll(pageable).getContent();
     }
 
@@ -48,9 +48,9 @@ public class EsResourceServiceImpl implements ESResourceService {
         pageable = new PageRequest(pageable.getPageNumber(), pageable.getPageSize(), sort);
         //判断是否有类型
         if (type == null || type.equalsIgnoreCase("") || type.equalsIgnoreCase("all")) {
-            pages = esResourceRepository.findDistinctByFileNameContainingOrDescriptionContaining(keyword, keyword, pageable);
+            pages = esResourceRepository.findDistinctByFileNameLikeOrDescriptionLike(keyword, keyword, pageable);
         } else {
-            pages = esResourceRepository.findDistinctByTypeAndFileNameContainingOrDescriptionContaining(type, keyword, keyword, pageable);
+            pages = esResourceRepository.findDistinctByTypeAndFileNameLikeOrDescriptionLike(type, keyword, keyword, pageable);
         }
         return pages;
     }
@@ -60,12 +60,12 @@ public class EsResourceServiceImpl implements ESResourceService {
         Page<ESResource> pages = null;
         Sort sort = new Sort(Sort.Direction.DESC, "createdAt");
         //PageRequest.of(pageNum, pageSize) 代替
-        PageRequest pageable = new PageRequest(pageNum, pageSize, sort);
+        PageRequest pageable = new PageRequest(pageNum - 1, pageSize, sort);
         //判断是否有类型
         if (type == null || type.equalsIgnoreCase("") || type.equalsIgnoreCase("all")) {
-            pages = esResourceRepository.findDistinctByFileNameContainingOrDescriptionContaining(keyword, keyword, pageable);
+            pages = esResourceRepository.findDistinctByFileNameLikeOrDescriptionLike(keyword, keyword, pageable);
         } else {
-            pages = esResourceRepository.findDistinctByTypeAndFileNameContainingOrDescriptionContaining(type, keyword, keyword, pageable);
+            pages = esResourceRepository.findDistinctByTypeAndFileNameLikeOrDescriptionLike(type, keyword, keyword, pageable);
         }
         return pages;
     }

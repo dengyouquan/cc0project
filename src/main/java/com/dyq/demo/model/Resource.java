@@ -12,7 +12,7 @@ import java.util.Date;
 @ToString(callSuper = true)
 public class Resource extends BaseModel {
     @Column(name = "is_enabled")
-    private Byte isEnabled;
+    private Boolean isEnabled;
     /**
      * elasticsearch ID
      */
@@ -34,9 +34,31 @@ public class Resource extends BaseModel {
     private Long userId;
     private Integer status;
 
-    public Resource(){
+    public Resource() {
         setUpdatedAt(new Date());
-        if(getId()==null)
+        if (getId() == null)
             setCreatedAt(new Date());
+    }
+
+    public static Resource getNullResource() {
+        Resource resource = new Resource();
+        resource.setUpdatedAt(null);
+        resource.setCreatedAt(null);
+        resource.setIsEnabled(null);
+        resource.setStatus(null);
+        resource.setFileFormat(null);
+        resource.setDescription(null);
+        resource.setFileName(null);
+        resource.setFilePath(null);
+        resource.setFileSize(null);
+        resource.setUserId(null);
+        resource.setEId(null);
+        resource.setStyle(null);
+        resource.setTags(null);
+        resource.setId(null);
+        resource.setType(null);
+        resource.setPage(null);
+        resource.setRows(null);
+        return resource;
     }
 }

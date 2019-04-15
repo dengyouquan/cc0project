@@ -1,6 +1,6 @@
 function getImages(pageIndex, pageSize, type, keyword) {
     $.ajax({
-        url: "/search/image",
+        url: "/search/resource",
         contentType: 'application/json',
         data: {
             "page": pageIndex,
@@ -23,6 +23,6 @@ function getImages(pageIndex, pageSize, type, keyword) {
 $(function () {
     $("#searchButton").click(function () {
         var keyword = $("#searchText").val();
-        window.location.href = "/search/image?keyword=" + keyword;
+        window.location.href = "/search/resource?keyword=" + keyword;
     });
 });

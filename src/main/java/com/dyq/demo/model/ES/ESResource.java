@@ -30,8 +30,9 @@ public class ESResource implements Serializable {
     private Date createdAt;
     @Field(index = false, type = FieldType.Date)  // 不做全文检索字段
     private Date updatedAt;
-    //@Field(index = false,type = FieldType.text)
+    @Field(type = FieldType.text)
     private String fileName;
+    @Field(type = FieldType.text)
     private String description;
     private String filePath;
     private String fileFormat;

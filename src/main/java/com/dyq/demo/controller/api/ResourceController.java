@@ -1,6 +1,7 @@
 package com.dyq.demo.controller.api;
 
 import com.dyq.demo.model.Resource;
+import com.dyq.demo.model.ResourceStatus;
 import com.dyq.demo.model.User;
 import com.dyq.demo.service.ResourceService;
 import com.dyq.demo.service.UserService;
@@ -83,6 +84,7 @@ public class ResourceController {
             updateResource.setFileName(resource.getFileName());
             updateResource.setFilePath(resource.getFilePath());
             updateResource.setFileSize(resource.getFileSize());
+            updateResource.setStatus(resource.getStatus());
             updateResource.setUpdatedAt(new Date());
             resource = updateResource;
         }
@@ -101,6 +103,8 @@ public class ResourceController {
             String[] arr = resource.getFilePath().split(".");
             if (arr.length > 0)
                 resource.setFileFormat(arr[arr.length - 1]);
+            resource.setStatus(ResourceStatus.NOT_VERIFY.value());
+            resource.setIsEnabled(true);
             System.out.println("save resource:" + resource);
             resourceService.save(resource);
             saveSuccess = true;

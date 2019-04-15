@@ -12,14 +12,14 @@ layui.use(['jquery_common_setting', 'form', 'upload'], function () {
 
     $.ajaxSetup({
         // 同步
-        async:true, // 默认true，异步
+        async: true, // 默认true，异步
         // 发送cookie
         xhrFields: {
             withCredentials: true
         },
         // 请求发送前
-        beforeSend:function(){
-            alert(send)
+        beforeSend: function () {
+            //alert(send)
             // 获取CSRF Token
             let csrfToken = $("meta[name='_csrf']").attr("content");
             let csrfHeader = $("meta[name='_csrf_header']").attr("content");
@@ -27,7 +27,7 @@ layui.use(['jquery_common_setting', 'form', 'upload'], function () {
             request.setRequestHeader(csrfHeader, csrfToken); // 添加CSRF Token
         },
         // 请求返回
-        complete:function(){
+        complete: function () {
             // 返回数据，根据数据调转页面等
         }
     });
@@ -45,12 +45,15 @@ layui.use(['jquery_common_setting', 'form', 'upload'], function () {
     var uploadInst = upload.render({
         elem: '#resourceUpload'
         //,url: '/uploadfile'
+        , accept: 'file'
+        , exts: 'zip|rar|7z|jpg|png|gif|bmp|jpeg|mp3|wmv|mp4|avi|rmvb'
         , url: '/services/resource'
         , before: function (obj) {
             //预读本地文件示例，不支持ie8
             obj.preview(function (index, file, result) {
                 $('#resource').attr('href', result); //图片链接（base64）
             });
+            layer.load(); //上传loading
         }
         , done: function (res) {
             //如果上传失败
@@ -63,6 +66,7 @@ layui.use(['jquery_common_setting', 'form', 'upload'], function () {
             $("#resource").attr("src", res.data);
             $("#filepath").attr("value", res.data);
             $("#filesize").attr("value", res.count);
+            layer.closeAll('loading');
         }
         , error: function () {
             //演示失败状态，并实现重传
@@ -71,6 +75,7 @@ layui.use(['jquery_common_setting', 'form', 'upload'], function () {
             demoText.find('.demo-reload').on('click', function () {
                 uploadInst.upload();
             });
+            layer.closeAll('loading');
         }
     });
 
@@ -172,7 +177,7 @@ $(function () {
             "fileSize": fileSize,
             "filePath": filePath
         };
-        console.log(data);
+        //console.log(data);
         uploadResource(data);
         //禁止默认跳转？？？
         return false;

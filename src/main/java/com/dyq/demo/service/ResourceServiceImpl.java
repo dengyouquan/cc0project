@@ -54,6 +54,8 @@ public class ResourceServiceImpl implements ResourceService {
         if (pageNum != null && pageSize != null) {
             PageHelper.startPage(pageNum, pageSize);
         }
-        return resourceRepository.selectAll();
+        Resource resource = Resource.getNullResource();
+        resource.setIsEnabled(true);
+        return resourceRepository.select(resource);
     }
 }

@@ -8,41 +8,45 @@
     <!--favicon图标-->
     <link rel="icon" href="/favicon.ico">
     <!--semantic.css-->
-    <link rel="stylesheet" href="/semantic/semantic.min.css" th:href="@{/semantic/semantic.min.css}" /><title>云智学习</title>
+    <link rel="stylesheet" href="/semantic/semantic.min.css" th:href="@{/semantic/semantic.min.css}"/>
+    <title>云智学习</title>
     <!--layui.css-->
     <link rel="stylesheet" href="/layui/css/layui.css" th:href="@{/layui/css/layui.css}">
 </head>
 <body>
-    <!--header-->
-    <div th:replace="~{fragments/header::header}"></div>
-    <!--content-->
-    <div style="margin-top: 10%;margin-bottom: 5%;margin-right: 0%!important;margin-left: 0%!important">
-        <ul class="flow-default" id="loadResource"></ul>
-        <!--图片项目-->
-        <div style="margin-top: 5%;margin-left: 5%;margin-right: 5%">
-            <div class="ui one column grid">
-                <div class="column">
-                    <div class="ui fluid card">
-                        <div class="resource">
-                            <img src="/images/avatar/large/daniel.jpg" th:src="${resource.filePath}">
-                        </div>
-                        <div class="content">
-                            <a class="header" th:text="${resource.fileName}">丹尼尔 路易斯</a>
-                            <div class="description">描述：<span th:text="${resource.description}"></span></div>
-                        </div>
-                        <div class="extra content">
-                            <span th:text="${resource.type}"></span><br/><br/><br/>
-                            <span><span th:text="${resource.fileSize}"></span>MB</span>
-                            <!--href="/download/image/?8"-->
-                            <!--<a style="float: right" th:href="@{/download/image/}+${image.id}">下载</a>-->
-                            <a style="float: right" th:href="@{/download/}+${resource.id}">下载</a>
-                        </div>
+<!--header-->
+<div th:replace="~{fragments/header::header}"></div>
+<!--content-->
+<div style="margin-top: 10%;margin-bottom: 5%;margin-right: 0%!important;margin-left: 0%!important">
+    <ul class="flow-default" id="loadResource"></ul>
+    <!--图片项目-->
+    <div style="margin-top: 5%;margin-left: 5%;margin-right: 5%">
+        <div class="ui one column grid">
+            <div class="column">
+                <div class="ui fluid card">
+                    <div class="resource">
+                        <img th:if="${not #strings.equals('picture', resource.type)}"
+                             src="/images/avatar/large/daniel.jpg" th:src="'/images/resource/'+${resource.type}+'.jpg'">
+                        <img th:if="${#strings.equals('picture', resource.type)}"
+                             src="/images/avatar/large/daniel.jpg" th:src="${resource.filePath}">
+                    </div>
+                    <div class="content">
+                        <a class="header" th:text="${resource.fileName}">丹尼尔 路易斯</a>
+                        <div class="description">描述：<span th:text="${resource.description}"></span></div>
+                    </div>
+                    <div class="extra content">
+                        <span th:text="${resource.type}"></span><br/><br/><br/>
+                        <span><span th:text="${resource.fileSize}"></span>KB</span>
+                        <!--href="/download/image/?8"-->
+                        <!--<a style="float: right" th:href="@{/download/image/}+${image.id}">下载</a>-->
+                        <a style="float: right" th:href="@{/services/resource/}+${resource.id}">下载</a>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    <!--footer-->
-    <div th:replace="~{/fragments/footer::footer}"></div>
+</div>
+<!--footer-->
+<div th:replace="~{/fragments/footer::footer}"></div>
 </body>
 </html>
