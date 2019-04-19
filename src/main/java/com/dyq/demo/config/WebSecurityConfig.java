@@ -66,9 +66,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http.headers().frameOptions().disable();
         http
                 .authorizeRequests()
+                .antMatchers("/api/comment/**", "/api/user/**").authenticated()
                 .antMatchers(
                         //URL
-                        "/login/**", "/check/**", "/register/**", "/index",
+                        "/index", "/", "/login/**", "/check/**", "/register/**", "/index",
                         "/services/**", "/api/**", "/search/**"
                         //static
                         , "/css/**", "/js/**", "/layui/**", "/layer/**", "/semantic/**", "/images/**",
@@ -101,7 +102,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .rememberMeCookieName("cc0project")
                 .and()
                 //上传接口不知道怎么加token
-                .csrf().ignoringAntMatchers("/h2-console/**", "/upload/image", "/uploadfile","/services/**")
+                .csrf().ignoringAntMatchers("/h2-console/**", "/upload/image", "/uploadfile", "/services/**")
                 .and()
                 //只允许一个用户登录,如果同一个账户两次登录,那么第一个账户将被踢下线,跳转到登录页面
                 .sessionManagement().maximumSessions(1).expiredUrl("/login");

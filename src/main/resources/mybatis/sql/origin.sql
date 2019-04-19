@@ -153,4 +153,38 @@ CREATE TABLE `resource` (
   PRIMARY KEY (`id`)
 ) ENGINE=Innodb AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COMMENT='资源信息表';
 
+CREATE TABLE `image` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `created_at` datetime NOT NULL DEFAULT now() COMMENT '创建时间',
+  `updated_at` datetime NOT NULL DEFAULT now() COMMENT '更新时间',
+  -- 强制】表达是与否概念的字段，必须使用 is _ xxx 的方式命名，数据类型是 unsigned tinyint
+  -- （ 1 表示是，0 表示否 ） 。
+  `is_enabled`  tinyint unsigned DEFAULT NULL COMMENT '是否可用',
+  `e_id`  bigint(20) DEFAULT NULL COMMENT 'elasticsearch ID',
+  `file_name` varchar(32) NOT NULL DEFAULT '' COMMENT '文件名',
+  `description` varchar(255) NOT NULL DEFAULT '' COMMENT '图片描述',
+  `file_path` varchar(255) NOT NULL DEFAULT '' COMMENT '文件路径',
+  `file_format` varchar(16) NOT NULL DEFAULT '' COMMENT '文件格式',
+  `file_size` varchar(16) NOT NULL DEFAULT '' COMMENT '文件大小',
+  `type` varchar(8) DEFAULT NULL COMMENT '类型',
+  `tags` varchar(128) DEFAULT NULL COMMENT '标签',
+  `user_id` bigint(20) DEFAULT NULL COMMENT '用户ID',
+  `status` int(20) DEFAULT NULL COMMENT '审核状态',
+  PRIMARY KEY (`id`)
+) ENGINE=Innodb AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COMMENT='图片信息表';
+
+CREATE TABLE `comment` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `created_at` datetime NOT NULL DEFAULT now() COMMENT '创建时间',
+  `updated_at` datetime NOT NULL DEFAULT now() COMMENT '更新时间',
+  -- 强制】表达是与否概念的字段，必须使用 is _ xxx 的方式命名，数据类型是 unsigned tinyint
+  -- （ 1 表示是，0 表示否 ） 。
+  `from_name` varchar(32) NOT NULL DEFAULT '' COMMENT '用户名',
+  `from_avatar` varchar(255) NOT NULL DEFAULT '' COMMENT '用户头像',
+  `content` varchar(255) NOT NULL DEFAULT '' COMMENT '评论',
+  `user_id` bigint(20) DEFAULT NULL COMMENT '用户ID',
+  `resource_id` bigint(20) DEFAULT NULL COMMENT '资源ID',
+  `enabled` tinyint(3) DEFAULT 1 COMMENT '启用',
+  PRIMARY KEY (`id`)
+) ENGINE=Innodb AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COMMENT='评论信息表';
 

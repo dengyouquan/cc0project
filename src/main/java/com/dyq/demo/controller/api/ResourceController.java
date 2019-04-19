@@ -1,5 +1,6 @@
 package com.dyq.demo.controller.api;
 
+import com.dyq.demo.model.ES.ESResource;
 import com.dyq.demo.model.Resource;
 import com.dyq.demo.model.ResourceStatus;
 import com.dyq.demo.model.User;
@@ -46,7 +47,9 @@ public class ResourceController {
     @GetMapping(value = "/{id}")
     public String view(@PathVariable Long id, Model model) {
         Resource resource = resourceService.findById(id);
+        ESResource esResource = new ESResource(resource);
         model.addAttribute("resource", resource);
+        model.addAttribute("esResource", esResource);
         return "/resourceDetail";
     }
 

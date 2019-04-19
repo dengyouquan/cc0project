@@ -16,18 +16,32 @@ layui.use('flow', function () {
             $.get('/search/resource/list' + keyword + '&page=' + page + '&limit=10', function (res) {
                 //假设你的列表返回在data集合中
                 layui.each(res.data, function (index, item) {
-                    lis.push('<div class="column"  style="cursor: pointer;" onclick="window.open(\'/api/resource/' + item.esdocumentId + '\',\'_self\')">\n' +
-                        '                    <div class="ui fluid card">\n' +
-                        '                        <div class="image">\n' +
-                        '                            <img lay-src="' + item.filePath + '">\n' +
-                        '                        </div>\n' +
-                        '                        <div class="content">\n' +
-                        '                            <a class="header" href="/api/resource/' + item.esdocumentId + '">' + item.fileName + '</a>\n' +
-                        '                        </div>\n' +
-                        '                    </div>\n' +
-                        '                </div>')
+                    if (item.type == "picture") {
+                        lis.push('<div class="column"  style="cursor: pointer;" onclick="window.open(\'/api/resource/' + item.esdocumentId + '?keyword=' + item.fileName + '\',\'_self\')">\n' +
+                            '                    <div class="ui fluid card">\n' +
+                            '                        <div class="image">\n' +
+                            '                            <p>' + item.type + '</p>\n' +
+                            '<img src="' + item.filePath + '">' +
+                            '                        </div>\n' +
+                            '                        <div class="content">\n' +
+                            '                            <a class="header" href="/api/resource/' + item.esdocumentId + '">' + item.fileName + '</a>\n' +
+                            '                        </div>\n' +
+                            '                    </div>\n' +
+                            '                </div>')
+                    } else {
+                        lis.push('<div class="column"  style="cursor: pointer;" onclick="window.open(\'/api/resource/' + item.esdocumentId + '?keyword=' + item.fileName + '\',\'_self\')">\n' +
+                            '                    <div class="ui fluid card">\n' +
+                            '                        <div class="image">\n' +
+                            '                            <p>' + item.type + '</p>\n' +
+                            ' <img  src="/images/resource/' + item.type + '.jpg">' +
+                            '                        </div>\n' +
+                            '                        <div class="content">\n' +
+                            '                            <a class="header" href="/api/resource/' + item.esdocumentId + '">' + item.fileName + '</a>\n' +
+                            '                        </div>\n' +
+                            '                    </div>\n' +
+                            '                </div>')
+                    }
                 });
-
                 //执行下一页渲染，第二参数为：满足“加载更多”的条件，即后面仍有分页
                 //pages为Ajax返回的总页数，只有当前页小于总页数的情况下，才会继续出现加载更多
                 next(lis.join(''), page < res.count / 9);

@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * CreatedDate:2018/6/16
@@ -43,9 +44,20 @@ public class SearchController {
     public ResponseEntity<Response> getAllResources(@RequestParam(value = "page", required = false, defaultValue = "1") int pageIndex,
                                                     @RequestParam(value = "limit", required = false, defaultValue = "10") int pageSize,
                                                     @RequestParam(value = "type", required = false, defaultValue = "all") String type,
-                                                    @RequestParam(value = "keyword", required = false, defaultValue = "") String keyword) {
+                                                    @RequestParam(value = "keyword", required = false, defaultValue = "") String keyword,
+                                                    @RequestParam(value = "contain_self", required = false, defaultValue = "true") Boolean containSelf,
+                                                    @RequestParam(value = "r_id", required = false, defaultValue = "0") Long r_id) {
         List<ESResource> esResourceList = esResourceService.findAll(type, keyword, pageIndex, pageSize).getContent();
         long esResourceNum = esResourceService.count();
+        int preSize = esResourceList.size();
+        //是否包含自身
+        if (!containSelf) {
+            esResourceList = esResourceList.stream().filter(esResource -> !esResource.getEsdocumentId().equals(r_id)).collect(Collectors.toList());
+        }
+        int nextSize = esResourceList.size();
+        if (nextSize == preSize - 1) {
+            esResourceNum--;
+        }
         System.out.println("esResourceList:" + esResourceList);
         System.out.println("esResourceNum:" + esResourceNum);
         return ResponseEntity.ok().body(new Response(0, "图片列表", (int) esResourceNum, esResourceList));

@@ -1,7 +1,9 @@
 package com.dyq.demo.controller;
 
 import com.dyq.demo.model.Image;
+import com.dyq.demo.model.Resource;
 import com.dyq.demo.service.ImageService;
+import com.dyq.demo.service.ResourceService;
 import com.dyq.demo.service.UserService;
 import com.dyq.demo.util.FastDFSClientWrapper;
 import com.dyq.demo.util.FileUtil;
@@ -28,7 +30,7 @@ public class UploadController {
     private FastDFSClientWrapper dfsClient;
 
     @Autowired
-    private ImageService imageService;
+    private ResourceService resourceService;
 
     // 上传文件
     @PostMapping
@@ -42,9 +44,9 @@ public class UploadController {
     // 下载文件
     @GetMapping(value = "/{id}")
     public ResponseEntity<byte[]> download(@PathVariable Long id) {
-        Image image = imageService.findById(id);
-        String fileUrl = image.getFilePath();
-        String fileName = image.getFileName();
+        Resource resource = resourceService.findById(id);
+        String fileUrl = resource.getFilePath();
+        String fileName = resource.getFileName();
         byte[] content = null;
         HttpHeaders headers = new HttpHeaders();
         try {
@@ -61,8 +63,8 @@ public class UploadController {
     @DeleteMapping(value = "/{id}")
     public ResponseEntity<Response> delete(@PathVariable Long id) throws Exception {
         //String fileUrl = "http://118.89.163.211:81/M00/00/00/rBEABlsWg-mAQBKDAAAXaU7Mr6E761.jpg";
-        Image image = imageService.findById(id);
-        String fileUrl = image.getFilePath();
+        Resource resource = resourceService.findById(id);
+        String fileUrl = resource.getFilePath();
         dfsClient.deleteFile(fileUrl);
         return ResponseEntity.ok().body(new Response(0, "删除成功", 0, fileUrl));
     }
