@@ -1,13 +1,22 @@
 package com.dyq.demo.controller.api;
 
+import com.dyq.demo.model.Authority;
 import com.dyq.demo.model.Image;
 import com.dyq.demo.model.User;
+import com.dyq.demo.model.UserPasswordUpdate;
+import com.dyq.demo.repository.AuthorityRepository;
+import com.dyq.demo.repository.UserRepository;
+import com.dyq.demo.service.AuthorityService;
 import com.dyq.demo.service.UserService;
 import com.dyq.demo.vo.Response;
 import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
@@ -27,6 +36,12 @@ import java.util.List;
 public class UserController {
     @Autowired
     private UserService userService;
+    @Autowired
+    private UserRepository userRepository;
+    @Autowired
+    private AuthorityService authorityService;
+    private BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
+
 
     @RequestMapping("list")
     public ResponseEntity<Response> getAll(@RequestParam(value = "page", required = false, defaultValue = "1") int pageIndex,
@@ -45,11 +60,15 @@ public class UserController {
     }
 
     @ResponseBody
+    @RequestMapping
+    public User user() {
+        return userService.getUserByPrincipal();
+    }
+
+    @ResponseBody
     @RequestMapping(value = "/view/{id}")
     public User view(@PathVariable Long id) {
-        ModelAndView result = new ModelAndView();
-        User user = userService.findById(id);
-        return user;
+        return userService.findById(id);
     }
 
     @DeleteMapping(value = "/{id}")
@@ -82,5 +101,42 @@ public class UserController {
         System.out.println("user:" + user);
         userService.save(user);
         return ResponseEntity.ok().body(new Response(0, msg, 0, null));
+    }
+
+    @ResponseBody
+    @PutMapping("/{id}")
+    public User update(@PathVariable Long id, @RequestBody User user) {
+        user.setId(id);
+        //密码 账号不可修改
+        user.setPassword(null);
+        user.setUsername(null);
+        userRepository.updateByPrimaryKeySelective(user);
+        //更新session中用户信息
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User query = new User();
+        query.setId(id);
+        List<Authority> authorities = authorityService.selectByUserId(id);
+        User updateUser = userRepository.selectOne(query);
+        updateUser.setAuthorities(authorities);
+        UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(updateUser, authentication.getCredentials(), authorities);
+        auth.setDetails(authentication.getDetails());
+        SecurityContextHolder.getContext().setAuthentication(auth);
+        return user;
+    }
+
+    @PutMapping("/updatePassword")
+    public ResponseEntity<Boolean> update(@RequestBody UserPasswordUpdate userPasswordUpdate) {
+        User principal = userService.getUserByPrincipal();
+        boolean passwordMatch = bCryptPasswordEncoder.matches(userPasswordUpdate.getOldPassword(), principal.getPassword());
+        if (passwordMatch) {
+            User user = new User();
+            user.setId(principal.getId());
+            user.setPassword(bCryptPasswordEncoder.encode(userPasswordUpdate.getUpdatePassword()));
+            userRepository.updateByPrimaryKeySelective(user);
+            return new ResponseEntity<>(true, HttpStatus.OK);
+
+        } else {
+            return new ResponseEntity<>(false, HttpStatus.OK);
+        }
     }
 }

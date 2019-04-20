@@ -66,7 +66,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http.headers().frameOptions().disable();
         http
                 .authorizeRequests()
-                .antMatchers("/api/comment/**", "/api/user/**").authenticated()
+                .antMatchers("/api/user/**").authenticated()
                 .antMatchers(
                         //URL
                         "/index", "/", "/login/**", "/check/**", "/register/**", "/index",
@@ -101,8 +101,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .key("www.dengyouquan.cn")
                 .rememberMeCookieName("cc0project")
                 .and()
-                //上传接口不知道怎么加token
-                .csrf().ignoringAntMatchers("/h2-console/**", "/upload/image", "/uploadfile", "/services/**")
+                //上传接口不知道怎么加token,logout用csrf，然后只能用post请求
+                .csrf().ignoringAntMatchers("/h2-console/**", "/upload/image", "/uploadfile", "/services/**", "/logout")
                 .and()
                 //只允许一个用户登录,如果同一个账户两次登录,那么第一个账户将被踢下线,跳转到登录页面
                 .sessionManagement().maximumSessions(1).expiredUrl("/login");
@@ -123,7 +123,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     public void configure(WebSecurity web) throws Exception {
-        web.ignoring().mvcMatchers("/static/**");
+        web.ignoring().mvcMatchers("/static/**", "/**/*.js", "/**/*.css", "/**/*.js", "/**/*.map", "/**/*.html",
+                "/**/*.png");
         //权限控制需要忽略所有静态资源，不然登录页面未登录状态无法加载css等静态资源
         /*web.ignoring().antMatchers("/css/**","/js/**","/layui/**",
                 "/semantic/**","/images/**","/favicon.ico","/font/**",

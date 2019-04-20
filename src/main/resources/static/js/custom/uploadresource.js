@@ -134,7 +134,7 @@ function alertLayer(res) {
 }
 
 function uploadResource(data) {
-    alert("uploadResource")
+    //alert("uploadResource")
     // 获取CSRF Token
     var csrfToken = $("meta[name='_csrf']").attr("content");
     var csrfHeader = $("meta[name='_csrf_header']").attr("content");

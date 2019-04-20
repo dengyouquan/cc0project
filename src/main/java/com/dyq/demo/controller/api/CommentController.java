@@ -15,6 +15,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -55,6 +56,8 @@ public class CommentController {
 
     }
 
+
+    @PreAuthorize("isAuthenticated()")
     @PostMapping
     public ResponseEntity<Response> save(@RequestParam(name = "content") String content,
                                          @RequestParam(name = "r_id") Long resourceId) {

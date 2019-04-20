@@ -57,4 +57,13 @@ layui.use('flow', function () {
         ,scrollElem: '#loadImage' //一般不用设置，此处只是演示需要。
     });*/
 });
+$(function () {
+    var t = $("#download");
+    t.click(function () {
+        alert("111")
+        var FileSaver = require('file-saver');
+        FileSaver.saveAs("http://127.0.0.1:8080/js/Blob.js", "Blob.js");
+        //FileSaver.saveAs(t.attr("href"), t.attr("download"));
+    });
+});
 

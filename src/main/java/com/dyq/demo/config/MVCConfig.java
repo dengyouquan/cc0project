@@ -48,6 +48,8 @@ public class MVCConfig implements WebMvcConfigurer {
         registry.addViewController("/search/image").setViewName("search/image");
         registry.addViewController("/search/resource").setViewName("search/resource");
         registry.addViewController("/error").setViewName("error");
+
+        registry.addViewController("/userspace").setViewName("userspace");
     }
 
 

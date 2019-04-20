@@ -49,12 +49,12 @@ public class LoginController {
     @Qualifier("authenticationManagerBean")
     AuthenticationManager authenticationManager;
 
-    @GetMapping("/userspace")
+    @GetMapping("/usermessage")
     public String userspace(Model model) {
         UserDetails principal = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         User user = userService.findByUsernameOrEmailOrPhone(principal.getUsername());
         model.addAttribute("user", user);
-        return "userspace";
+        return "usermessage";
     }
 
     @PostMapping("/login/register")

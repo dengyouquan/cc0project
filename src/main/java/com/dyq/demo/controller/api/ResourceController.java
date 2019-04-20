@@ -103,7 +103,7 @@ public class ResourceController {
         else if (resource.getFileSize() == null)
             msg = "文件大小为空，新增失败！";
         else {
-            String[] arr = resource.getFilePath().split(".");
+            String[] arr = resource.getFilePath().split("\\.");
             if (arr.length > 0)
                 resource.setFileFormat(arr[arr.length - 1]);
             resource.setStatus(ResourceStatus.NOT_VERIFY.value());

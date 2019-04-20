@@ -38,10 +38,12 @@
                         <div class="description">描述：<span th:text="${resource.description}"></span></div>
                     </div>
                     <div class="extra content">
-                        <span th:text="${resource.type}"></span><br/><br/><br/>
-                        <a th:href="@{/services/resource/}+${resource.id}">下载</a>
-                        <span style="float: right;margin-right: 3%"><span
-                                th:text="${resource.fileSize}"></span>KB</span>
+                        <span style="margin-left: 1%" th:text="${resource.type}"></span>
+                        <span style="float: right;margin-right: 1%"><span
+                                th:text="${resource.fileSize}"></span>KB</span><br/><br/><br/>
+                        <a style="margin-left: 1%" th:href="@{/services/resource/}+${resource.id}">下载</a>
+                        <a id="download" style="float: right;margin-right: 1%" th:url="${resource.filePath}"
+                           th:download="${resource.fileName}+.+${resource.fileFormat}">预览</a>
                         <!--href="/download/image/?8"-->
                         <!--<a style="float: right" th:href="@{/download/image/}+${image.id}">下载</a>-->
 
@@ -103,14 +105,17 @@
 <script src="/js/timeago.min.js" th:src="@{/js/timeago.min.js}" type="text/javascript"></script>
 <!-- form回调-->
 <script src="/js/jquery.form.min.js" th:src="@{/js/jquery.form.min.js}" type="text/javascript"></script>
-<script src="/js/custom/search/resourcedetail.js" th:src="@{/js/custom/search/resourcedetail.js}"
-        type="text/javascript"></script>
-<script src="/js/custom/comment.js" th:src="@{/js/custom/comment.js}" type="text/javascript"></script>
 <!-- Begin emoji-picker JavaScript -->
 <script src="emoji/js/config.js" th:src="@{/emoji/js/config.js}"></script>
 <script src="emoji/js/util.js" th:src="@{/emoji/js/util.js}"></script>
 <script src="emoji/js/jquery.emojiarea.js" th:src="@{/emoji/js/jquery.emojiarea.js}"></script>
 <script src="emoji/js/emoji-picker.js" th:src="@{/emoji/js/emoji-picker.js}"></script>
 <!-- End emoji-picker JavaScript -->
+<script src="js/Blob.js" th:src="@{/js/Blob.js}"></script>
+<script src="js/FileSaver.min.js" th:src="@{/js/FileSaver.min.js}"></script>
+<!-- Custom -->
+<script src="/js/custom/search/resourcedetail.js" th:src="@{/js/custom/search/resourcedetail.js}"
+        type="text/javascript"></script>
+<script src="/js/custom/comment.js" th:src="@{/js/custom/comment.js}" type="text/javascript"></script>
 </body>
 </html>

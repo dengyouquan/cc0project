@@ -46,7 +46,7 @@ public class UploadController {
     public ResponseEntity<byte[]> download(@PathVariable Long id) {
         Resource resource = resourceService.findById(id);
         String fileUrl = resource.getFilePath();
-        String fileName = resource.getFileName();
+        String fileName = resource.getFileName() + "." + resource.getFileFormat();
         byte[] content = null;
         HttpHeaders headers = new HttpHeaders();
         try {
