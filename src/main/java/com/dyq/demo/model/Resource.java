@@ -5,6 +5,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 import javax.persistence.Column;
+import javax.persistence.Transient;
 import java.util.Date;
 
 @Getter
@@ -33,6 +34,12 @@ public class Resource extends BaseModel {
     @Column(name = "user_id")
     private Long userId;
     private Integer status;
+    @Column(name = "total_rate")
+    private Long totalRate;
+    @Column(name = "total_rate_num")
+    private Integer totalRateNum;
+    @Transient
+    private Integer averageRate;
 
     public Resource() {
         setUpdatedAt(new Date());

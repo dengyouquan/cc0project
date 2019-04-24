@@ -32,15 +32,16 @@ public class ResourceServiceImpl implements ResourceService {
         ESResource esResource = null;
         if (resource.getId() != null) {
             resourceRepository.updateByPrimaryKey(resource);
-            esResource = esResourceRepository.findByEsdocumentId(resource.getId());
-            esResource.update(resource);
+            //elasticSearch 有问题
+            //esResource = esResourceRepository.findByEsdocumentId(resource.getId());
+            //esResource.update(resource);
         } else {
             resourceRepository.insert(resource);
             //保存elasticsearch
             esResource = new ESResource(resource);
+            //elasticsearch保存
+            esResourceRepository.save(esResource);
         }
-        //elasticsearch保存
-        esResourceRepository.save(esResource);
 
     }
 

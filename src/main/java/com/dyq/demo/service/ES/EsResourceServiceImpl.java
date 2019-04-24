@@ -58,14 +58,18 @@ public class EsResourceServiceImpl implements ESResourceService {
     @Override
     public Page<ESResource> findAll(String type, String keyword, Integer pageNum, Integer pageSize) {
         Page<ESResource> pages = null;
-        Sort sort = new Sort(Sort.Direction.DESC, "createdAt");
-        //PageRequest.of(pageNum, pageSize) 代替
-        PageRequest pageable = new PageRequest(pageNum - 1, pageSize, sort);
-        //判断是否有类型
-        if (type == null || type.equalsIgnoreCase("") || type.equalsIgnoreCase("all")) {
-            pages = esResourceRepository.findDistinctByFileNameLikeOrDescriptionLike(keyword, keyword, pageable);
-        } else {
-            pages = esResourceRepository.findDistinctByTypeAndFileNameLikeOrDescriptionLike(type, keyword, keyword, pageable);
+        try {
+            Sort sort = new Sort(Sort.Direction.DESC, "createdAt");
+            //PageRequest.of(pageNum, pageSize) 代替
+            PageRequest pageable = new PageRequest(pageNum - 1, pageSize, sort);
+            //判断是否有类型
+            if (type == null || type.equalsIgnoreCase("") || type.equalsIgnoreCase("all")) {
+                pages = esResourceRepository.findDistinctByFileNameLikeOrDescriptionLike(keyword, keyword, pageable);
+            } else {
+                pages = esResourceRepository.findDistinctByTypeAndFileNameLikeOrDescriptionLike(type, keyword, keyword, pageable);
+            }
+        } catch (Exception e) {
+            //搜索会有异常Resolved exception caused by Handler execution: org.springframework.dao.InvalidDataAccessApiUsageException: Cannot constructQuery '*"3D音乐馆 - 3DFade 小清新电音"'. Use expression or multiple clauses instead.
         }
         return pages;
     }

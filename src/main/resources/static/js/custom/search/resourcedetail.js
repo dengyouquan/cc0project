@@ -1,6 +1,7 @@
-layui.use('flow', function () {
+layui.use(['flow', 'rate'], function () {
     let $ = layui.jquery; //不用额外加载jQuery，flow模块本身是有依赖jQuery的，直接用即可。
     let flow = layui.flow;
+    let rate = layui.rate;
 
     flow.load({
         elem: '#loadResourceDetail' //流加载容器
@@ -57,6 +58,32 @@ layui.use('flow', function () {
         ,scrollElem: '#loadImage' //一般不用设置，此处只是演示需要。
     });*/
 });
+
+// rate
+layui.use(['rate'], function () {
+    var rate = layui.rate;
+    //渲染
+    var rate = rate.render({
+        elem: '#resourceRate', //绑定元素
+        choose: function (value) {
+            alert(value)
+            /*$.ajax({
+                url: '/api/rates',
+                type: 'post',
+                data: {"rate": value},
+                async: false,
+                dataType: 'json'
+            }).then(function (res) {
+                self.userRate = res;
+                self.isRate = true;
+            }).fail(function () {
+                console.log('rate fail(未登录)');
+                self.isRate = false;
+            });*/
+        }
+    });
+});
+
 $(function () {
     var t = $("#download");
     t.click(function () {
@@ -65,5 +92,66 @@ $(function () {
         FileSaver.saveAs("http://127.0.0.1:8080/js/Blob.js", "Blob.js");
         //FileSaver.saveAs(t.attr("href"), t.attr("download"));
     });
+});
+
+var app = new Vue({
+    el: '#app',
+    data: {
+        isRate: {},
+        userRate: {}
+    },
+    methods: {
+        userRateSave: function () {
+            $.ajax({
+                url: '/api/rates',
+                type: 'post',
+                data: self.userRate,
+                async: false,
+                dataType: 'json'
+            }).then(function (res) {
+                self.userRate = res;
+                self.isRate = true;
+            }).fail(function () {
+                console.log('rate fail(未登录)');
+                self.isRate = false;
+            });
+        }
+    },
+    created: function () {
+        self = this;
+        let arr = window.location.href.split("?")[0].split("/");
+        let r_id = arr[arr.length - 1];
+        //加载用户评分信息
+        $.ajax({
+            url: '/api/rates?resource_id=' + r_id,
+            type: 'get',
+        }).then(function (res) {
+            self.isRate = res == null;
+            //alert(self.isRate)
+            self.userRate = res;
+            console.log(self.userRate)
+            console.log(self.isRate)
+            /*if (self.isRate) {
+                layui.use(['rate'], function () {
+                    var rate = layui.rate;
+                    var userRate = rate.render({
+                        elem: '#yourRate',//绑定元素
+                        readonly: true,
+                        value: self.userRate.rate
+                    });
+                });
+            }else{
+                //评分
+                layui.use(['rate'], function () {
+                    var rate = layui.rate;
+                    var rate = rate.render({
+                        elem: '#rate',//绑定元素
+                    });
+                });
+            }*/
+        }).fail(function () {
+            console.log('rate fail');
+        });
+    }
 });
 

@@ -5,6 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="CC0资源网站">
     <meta name="author" content="dyq">
+    <!--CSRF-->
+    <meta name="_csrf" th:content="${_csrf.token}"/>
+    <!-- default header name is X-CSRF-TOKEN -->
+    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
     <!--favicon图标-->
     <link rel="icon" href="/favicon.ico">
     <!--semantic.css-->
@@ -19,7 +23,7 @@
 <!--header-->
 <div th:replace="~{fragments/header::header}"></div>
 <!--content-->
-<div style="margin-top: 10%;margin-bottom: 5%;margin-right: 0%!important;margin-left: 0%!important">
+<div style="margin-top: 10%;margin-bottom: 5%;margin-right: 0%!important;margin-left: 0%!important" id="app">
     <!--<ul class="flow-default" id="loadResource"></ul>-->
     <!--图片项目-->
     <div style="margin-top: 5%;margin-left: 10%;margin-right: 10%">
@@ -38,6 +42,26 @@
                         <div class="description">描述：<span th:text="${resource.description}"></span></div>
                     </div>
                     <div class="extra content">
+                        <!--<div id="resourceRate"></div>-->
+                        <div v-if="!isRate">
+                            <span>评分：</span>
+                            <div id="resourceRate"></div>
+                        </div>
+                        <div v-if="isRate">
+                            <span>你的评分：</span>
+                            <div id="yourRate"></div>
+                        </div>
+                        <div>
+                        </div>
+
+                        <div>
+                            共<span th:text="${resource.totalRateNum}"></span>人评论
+                            <span style="float: right;margin-right: 1%">
+                                平均评分:
+                            <span th:text="${resource.averageRate}"></span>/5
+                            </span>
+                        </div>
+                        <br/><br/>
                         <span style="margin-left: 1%" th:text="${resource.type}"></span>
                         <span style="float: right;margin-right: 1%"><span
                                 th:text="${resource.fileSize}"></span>KB</span><br/><br/><br/>
@@ -114,8 +138,194 @@
 <script src="js/Blob.js" th:src="@{/js/Blob.js}"></script>
 <script src="js/FileSaver.min.js" th:src="@{/js/FileSaver.min.js}"></script>
 <!-- Custom -->
-<script src="/js/custom/search/resourcedetail.js" th:src="@{/js/custom/search/resourcedetail.js}"
-        type="text/javascript"></script>
+<!--<script src="/js/custom/search/resourcedetail.js" th:src="@{/js/custom/search/resourcedetail.js}"
+        type="text/javascript"></script>-->
 <script src="/js/custom/comment.js" th:src="@{/js/custom/comment.js}" type="text/javascript"></script>
+<script>
+
+    function alertLayer(value) {
+        //示范一个公告层
+        layer.open({
+            type: 1
+            ,
+            title: false //不显示标题栏
+            ,
+            closeBtn: false
+            ,
+            area: '300px;'
+            ,
+            shade: 0.8
+            ,
+            id: 'LAY_layuipro' //设定一个id，防止重复弹出
+            ,
+            btn: ['评分', '取消']
+            ,
+            btnAlign: 'c'
+            ,
+            moveType: 1 //拖拽模式，0或者1
+            ,
+            content: '<div style="padding: 50px; line-height: 22px; background-color: #393D49; color: #fff; font-weight: 300;">你的评分为：' +
+                value + '</div>'
+            ,
+            yes: function (layero) {
+                saveRate(value)
+            }
+        });
+    }
+
+    function saveRate(value) {
+        // 获取CSRF Token
+        var csrfToken = $("meta[name='_csrf']").attr("content");
+        var csrfHeader = $("meta[name='_csrf_header']").attr("content");
+        //alert(csrfToken)
+        //alert(csrfHeader)
+        let arr = window.location.href.split("?")[0].split("/");
+        let r_id = arr[arr.length - 1];
+        $.ajax({
+            url: '/api/rates',
+            type: 'post',
+            data: {
+                "rate": value,
+                "resource_id": r_id
+            },
+            beforeSend: function (request) {
+                request.setRequestHeader(csrfHeader, csrfToken); // 添加CSRF Token
+            },
+        }).then(function (res) {
+            window.location.reload()
+        }).fail(function () {
+            console.log('rate fail(未登录)');
+        });
+    }
+
+    $(function () {
+        var t = $("#download");
+        t.click(function () {
+            alert("111")
+            var FileSaver = require('file-saver');
+            FileSaver.saveAs("http://127.0.0.1:8080/js/Blob.js", "Blob.js");
+            //FileSaver.saveAs(t.attr("href"), t.attr("download"));
+        });
+    });
+
+    var app = new Vue({
+        el: '#app',
+        data: {
+            isRate: {},
+            userRate: {},
+            score: 0
+        },
+        methods: {
+            userRateSave: function () {
+                $.ajax({
+                    url: '/api/rates',
+                    type: 'post',
+                    data: self.userRate,
+                    async: false,
+                    dataType: 'json'
+                }).then(function (res) {
+                    self.userRate = res;
+                    self.isRate = true;
+                }).fail(function () {
+                    console.log('rate fail(未登录)');
+                    self.isRate = false;
+                });
+            }
+        },
+        created: function () {
+            self = this;
+            let arr = window.location.href.split("?")[0].split("/");
+            let r_id = arr[arr.length - 1];
+            //加载用户评分信息
+            $.ajax({
+                url: '/api/rates?resource_id=' + r_id,
+                type: 'get',
+            }).then(function (res) {
+                self.isRate = (JSON.stringify(res) === '{}');
+                //alert(self.isRate)
+                self.userRate = res;
+                self.score = res.rate;
+                console.log(self.userRate)
+                console.log(self.isRate)
+                layui.use(['flow', 'rate', 'layer'], function () {
+                    let $ = layui.jquery; //不用额外加载jQuery，flow模块本身是有依赖jQuery的，直接用即可。
+                    let flow = layui.flow;
+                    let rate = layui.rate;
+                    let layer = layui.layer;
+
+                    flow.load({
+                        elem: '#loadResourceDetail' //流加载容器
+                        , scrollElem: '#loadResourceDetail' //滚动条所在元素，一般不用填，此处只是演示需要。
+                        , isAuto: false
+                        , isLazyimg: true
+                        , done: function (page, next) { //加载下一页
+                            let lis = [];
+                            let data = window.location.search;
+                            let keyword = data;
+                            let arr = window.location.href.split("?")[0].split("/");
+                            let r_id = arr[arr.length - 1];
+                            //alert(r_id);
+                            //以jQuery的Ajax请求为例，请求下一页数据（注意：page是从2开始返回）
+                            $.get('/search/resource/list' + keyword + '&page=' + page + '&limit=10&contain_self=false&r_id=' + r_id, function (res) {
+                                //假设你的列表返回在data集合中
+                                layui.each(res.data, function (index, item) {
+                                    if (item.type == "picture") {
+                                        lis.push('<div class="column"  style="cursor: pointer;" onclick="window.open(\'/api/resource/' + item.esdocumentId + '?keyword=' + item.fileName + '\',\'_self\')">\n' +
+                                            '                    <div class="ui fluid card">\n' +
+                                            '                        <div class="image">\n' +
+                                            '                            <p>' + item.type + '</p>\n' +
+                                            '<img src="' + item.filePath + '">' +
+                                            '                        </div>\n' +
+                                            '                        <div class="content">\n' +
+                                            '                            <a class="header" href="/api/resource/' + item.esdocumentId + '">' + item.fileName + '</a>\n' +
+                                            '                        </div>\n' +
+                                            '                    </div>\n' +
+                                            '                </div>')
+                                    } else {
+                                        lis.push('<div class="column"  style="cursor: pointer;" onclick="window.open(\'/api/resource/' + item.esdocumentId + '?keyword=' + item.fileName + '\',\'_self\')">\n' +
+                                            '                    <div class="ui fluid card">\n' +
+                                            '                        <div class="image">\n' +
+                                            '                            <p>' + item.type + '</p>\n' +
+                                            ' <img  src="/images/resource/' + item.type + '.jpg">' +
+                                            '                        </div>\n' +
+                                            '                        <div class="content">\n' +
+                                            '                            <a class="header" href="/api/resource/' + item.esdocumentId + '">' + item.fileName + '</a>\n' +
+                                            '                        </div>\n' +
+                                            '                    </div>\n' +
+                                            '                </div>')
+                                    }
+                                });
+                                //执行下一页渲染，第二参数为：满足“加载更多”的条件，即后面仍有分页
+                                //pages为Ajax返回的总页数，只有当前页小于总页数的情况下，才会继续出现加载更多
+                                next(lis.join(''), page < res.count / 9);
+                            });
+                        }
+                    });
+
+                    //按屏加载图片-懒加载
+                    /*flow.lazyimg({
+                        elem: '#loadImage img'
+                        ,scrollElem: '#loadImage' //一般不用设置，此处只是演示需要。
+                    });*/
+
+                    var resourceRate = rate.render({
+                        elem: '#resourceRate', //绑定元素
+                        choose: function (value) {
+                            alertLayer(value);
+                        }
+                    });
+
+                    var yourRate = rate.render({
+                        elem: '#yourRate',//绑定元素
+                        readonly: true,
+                        value: self.score
+                    });
+                });
+            }).fail(function () {
+                console.log('rate fail');
+            });
+        }
+    });
+</script>
 </body>
 </html>

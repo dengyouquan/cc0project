@@ -47,6 +47,13 @@ public class ResourceController {
     @GetMapping(value = "/{id}")
     public String view(@PathVariable Long id, Model model) {
         Resource resource = resourceService.findById(id);
+        //计算平均分数
+        if (resource.getTotalRateNum() == null || resource.getTotalRateNum() == 0) {
+            resource.setAverageRate(0);
+        } else {
+            double score = resource.getTotalRate() * 1.0 / resource.getTotalRateNum();
+            resource.setAverageRate((int) Math.round(score));
+        }
         ESResource esResource = new ESResource(resource);
         model.addAttribute("resource", resource);
         model.addAttribute("esResource", esResource);

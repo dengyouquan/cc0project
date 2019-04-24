@@ -5,6 +5,7 @@ import com.dyq.demo.model.ES.ESResource;
 import com.dyq.demo.model.Image;
 import com.dyq.demo.service.ES.ESImageService;
 import com.dyq.demo.service.ES.ESResourceService;
+import com.dyq.demo.util.CharacterFilter;
 import com.dyq.demo.vo.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -47,6 +48,7 @@ public class SearchController {
                                                     @RequestParam(value = "keyword", required = false, defaultValue = "") String keyword,
                                                     @RequestParam(value = "contain_self", required = false, defaultValue = "true") Boolean containSelf,
                                                     @RequestParam(value = "r_id", required = false, defaultValue = "0") Long r_id) {
+        //keyword = CharacterFilter.keywordFilter(keyword);
         List<ESResource> esResourceList = esResourceService.findAll(type, keyword, pageIndex, pageSize).getContent();
         long esResourceNum = esResourceService.count();
         int preSize = esResourceList.size();

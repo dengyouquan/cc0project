@@ -15,19 +15,14 @@
         <div class="menu">
             <div class="ui left pointing dropdown link item">声音
                 <div class="menu">
-                    <a class="item" href="/musics">音乐</a>
-                    <a class="item" href="/sounds">音效</a>
+                    <a class="item" href="/search/resource?type=music">音乐</a>
+                    <a class="item" href="/search/resource?type=sound">音效</a>
                 </div>
             </div>
-            <div class="ui left pointing dropdown link item">游戏
-                <div class="menu">
-                    <a class="item" href="/games/3d">3d</a>
-                    <a class="item" href="/games/2d">2d</a>
-                    <a class="item" href="/games/texture">贴图</a>
-                </div>
-            </div>
-            <a class="item" href="/images">图片</a>
-            <a class="item" href="/videos">视频</a>
+            <a class="item" href="/search/resource?type=game">游戏素材</a>
+            <a class="item" href="/search/resource?type=picture">图片</a>
+            <a class="item" href="/search/resource?type=video">视频</a>
+            <a class="item" href="/search/resource?type=other">其他</a>
             <!--admin-->
             <div sec:authorize ifAllGranted='ROLE_ADMIN'>
                 <a class="item" href="/users" th:action="@{/users}">控制台</a>
@@ -60,7 +55,7 @@
                 <div class="menu">
                     <a class="item" href="/usermessage" th:action="@{/usermessage}">用户信息</a>
                     <a class="item" href="/userspace" th:action="@{/userspace}">个人空间</a>
-                   <!-- <a class="item uploadcourse" href="/api/image/add" th:action="@{/api/image/add}">上传图片</a>-->
+                    <!-- <a class="item uploadcourse" href="/api/image/add" th:action="@{/api/image/add}">上传图片</a>-->
                     <a class="item uploadcourse" href="/api/resource/add" th:action="@{/api/resource/add}">上传资源</a>
                 </div>
             </div>
