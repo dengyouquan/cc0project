@@ -42,8 +42,7 @@
                         <div class="description">描述：<span th:text="${resource.description}"></span></div>
                     </div>
                     <div class="extra content">
-                        <!--<div id="resourceRate"></div>-->
-                        <div v-if="!isRate">
+                        <div id="resourceRateDiv">
                             <span>评分：</span>
                             <div id="resourceRate"></div>
                         </div>
@@ -241,7 +240,9 @@
                 url: '/api/rates?resource_id=' + r_id,
                 type: 'get',
             }).then(function (res) {
-                self.isRate = (JSON.stringify(res) === '{}');
+                //alert(JSON.stringify(res));
+                //alert(Object.keys(res).length)
+                self.isRate = (Object.keys(res).length !== 0);
                 //alert(self.isRate)
                 self.userRate = res;
                 self.score = res.rate;
@@ -307,7 +308,6 @@
                         elem: '#loadImage img'
                         ,scrollElem: '#loadImage' //一般不用设置，此处只是演示需要。
                     });*/
-
                     var resourceRate = rate.render({
                         elem: '#resourceRate', //绑定元素
                         choose: function (value) {
@@ -321,6 +321,11 @@
                         value: self.score
                     });
                 });
+
+                //不能用v-if，会有问题，没有css效果，每次
+                if (self.isRate) {
+                    $("#resourceRateDiv").hide();
+                }
             }).fail(function () {
                 console.log('rate fail');
             });

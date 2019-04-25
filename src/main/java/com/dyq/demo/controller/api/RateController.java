@@ -27,12 +27,13 @@ public class RateController {
     private UserService userService;
 
     @GetMapping
-    public Rate rate(@RequestParam(value = "resource_id") Long resourceId) {
+    public ResponseEntity<Rate> rate(@RequestParam(value = "resource_id") Long resourceId) {
         User user = userService.getUserByPrincipal();
         if (user == null) {
             return null;
         }
-        return rateService.getRateByUserIdAndResourceId(user.getId(), resourceId);
+        Rate rate = rateService.getRateByUserIdAndResourceId(user.getId(), resourceId);
+        return ResponseEntity.ok(rate);
     }
 
     //@PreAuthorize("isAuthenticated()")
