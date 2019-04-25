@@ -6,11 +6,7 @@ import org.springframework.context.annotation.Configuration;
 
 import java.util.Properties;
 
-/**
- * CreatedDate:2018/6/2
- * Author:dyq
- * 配置PageHelper
- */
+
 @Configuration
 public class PageHelperConfig {
     @Bean

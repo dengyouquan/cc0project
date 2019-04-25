@@ -26,10 +26,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
-/**
- * CreatedDate:2018/6/2
- * Author:dyq
- */
 //@RestController
 @Controller
 @RequestMapping("/api/image")

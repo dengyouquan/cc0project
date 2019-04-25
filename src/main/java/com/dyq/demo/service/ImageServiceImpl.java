@@ -11,10 +11,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-/**
- * CreatedDate:2018/6/2
- * Author:dyq
- */
 @Service
 public class ImageServiceImpl implements ImageService {
     @Autowired

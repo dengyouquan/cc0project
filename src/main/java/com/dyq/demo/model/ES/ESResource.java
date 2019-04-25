@@ -11,10 +11,6 @@ import javax.persistence.Id;
 import java.io.Serializable;
 import java.util.Date;
 
-/**
- * CreatedDate:2018/6/16
- * Author:dyq
- */
 @Getter
 @Setter
 @ToString

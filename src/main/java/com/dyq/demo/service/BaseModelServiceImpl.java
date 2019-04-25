@@ -7,10 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 
-/**
- * CreatedDate:2018/6/2
- * Author:dyq
- */
 public class BaseModelServiceImpl<T extends BaseModel> implements BaseModelService<T> {
     @Autowired
     protected MyMapper<T> repository;

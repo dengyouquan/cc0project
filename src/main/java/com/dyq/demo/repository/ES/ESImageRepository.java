@@ -7,10 +7,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.elasticsearch.core.ElasticsearchTemplate;
 import org.springframework.data.elasticsearch.repository.ElasticsearchRepository;
 
-/**
- * CreatedDate:2018/6/16
- * Author:dyq
- */
 public interface ESImageRepository extends ElasticsearchRepository<ESImage, String> {
     ESImage findByEsdocumentId(Long esdocumentId);
     Page<ESImage> findDistinctByFileNameContainingOrDescriptionContaining(String fileName,String description, Pageable pageable);

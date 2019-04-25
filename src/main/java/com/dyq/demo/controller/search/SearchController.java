@@ -17,10 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import java.util.List;
 import java.util.stream.Collectors;
 
-/**
- * CreatedDate:2018/6/16
- * Author:dyq
- */
+
 @Controller
 @RequestMapping("/search")
 public class SearchController {

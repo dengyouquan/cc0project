@@ -17,10 +17,6 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
-/**
- * CreatedDate:2018/5/29
- * Author:dyq
- */
 //@RestController
 @Controller
 @RequestMapping("/api/authority")
