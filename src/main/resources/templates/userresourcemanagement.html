@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <title>资源审核</title>
+    <title>资源管理</title>
     <style>
         body {
             margin: 10px;
@@ -24,8 +24,8 @@
 </body>
 
 <script type="text/html" id="barDemo">
-    <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="agree">审核通过</a>
-    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="oppose">审核不通过</a>
+    <!--<a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="edit">编辑</a>-->
+    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
 </script>
 <script>
     var layer, table, element, laydate, form;
@@ -58,55 +58,30 @@
             // 获取CSRF Token
             let csrfToken = $("meta[name='_csrf']").attr("content");
             let csrfHeader = $("meta[name='_csrf_header']").attr("content");
-            if (layEvent === 'agree') {
-                layer.confirm('真的审核通过这个资源吗？', function (index) {
+            if (layEvent === 'edit') {
+            } else if (layEvent === 'del') {
+                layer.confirm('真的删除这个资源吗？', function (index) {
                     $.ajax({
-                        url: "/api/resource/" + obj.data.id + "/agree",
+                        url: "/api/resource/" + obj.data.id + "/enable",
                         type: 'put',
                         async: true,
                         dataType: 'json',
                         beforeSend: function (request) {
                             request.setRequestHeader(csrfHeader, csrfToken); // 添加CSRF Token
-                        },
-                        success: function () {
-                            obj.del(); //删除对应行（tr）的DOM结构
-                            layui.use('layer', function () {
-                                var layer = layui.layer;
-                                layer.msg('审核通过', {offset: 'lb'});
-                            });
-                        },
-                        error: function () {
-                            layui.use(['layer'], function () {
-                                let layer = layui.layer;
-                                layer.msg("审核失败！");
-                            });
                         }
                     })
-                    layer.close(index);
-                });
-            } else if (layEvent === 'oppose') {
-                layer.confirm('真的审核拒绝这个资源吗？', function (index) {
-                    $.ajax({
-                        url: "/api/resource/" + obj.data.id + "/oppose",
-                        type: 'put',
-                        async: true,
-                        dataType: 'json',
-                        beforeSend: function (request) {
-                            request.setRequestHeader(csrfHeader, csrfToken); // 添加CSRF Token
-                        },
-                        success: function () {
+                    .then(function (res) {
                             obj.del(); //删除对应行（tr）的DOM结构
                             layui.use('layer', function () {
                                 var layer = layui.layer;
-                                layer.msg('审核拒绝', {offset: 'lb'});
+                                layer.msg('删除成功', {offset: 'lb'});
                             });
-                        },
-                        error: function () {
-                            layui.use(['layer'], function () {
+                        })
+                    .fail(function () {
+                        layui.use(['layer'], function () {
                                 let layer = layui.layer;
-                                layer.msg("审核失败！");
+                                layer.msg("删除失败！");
                             });
-                        }
                     })
                     layer.close(index);
                 });
@@ -126,7 +101,7 @@
                 table.render({
                     elem: '#demo'
                     , id: 'testReload'
-                    , url: '/api/resource/list?status=0'
+                    , url: '/api/resource/user'
                     , title: '资源管理表'
                     , page: true //开启分页
                     /* , toolbar: 'default' //开启工具栏，此处显示默认图标，可以自定义模板，详见文档*/

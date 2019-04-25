@@ -10,4 +10,7 @@ public interface ResourceRepository extends MyMapper<Resource> {
 
     @Select("select count(*) from resource where is_enabled=1 and status=#{status}")
     int getCountByStatus(int status);
+
+    @Select("select count(*) from resource where is_enabled=1 and user_id=#{userId}")
+    int getCountByUserId(long userId);
 }

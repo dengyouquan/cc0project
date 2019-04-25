@@ -33,6 +33,18 @@ public class CommentController {
     @Autowired
     private UserService userService;
 
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping("/user")
+    public ResponseEntity<Response> getAllByUser(@RequestParam(value = "page", required = false, defaultValue = "1") int pageIndex,
+                                                 @RequestParam(value = "limit", required = false, defaultValue = "10") int pageSize) {
+        User user = userService.getUserByPrincipal();
+        List<Comment> commentList = commentService.findAllByUserId(pageIndex, pageSize, user.getId());
+        int commentNum = commentService.countByUserId(user.getId());
+        // todo 可以通过pageHelper的PageInfo得到总数量
+        System.out.println("resourceNum:" + commentNum);
+        return ResponseEntity.ok().body(new Response(0, "评论列表", commentNum, commentList));
+    }
+
     @GetMapping
     public String comment(Model model,
                           @RequestParam(value = "async", required = false) boolean async,
@@ -72,5 +84,11 @@ public class CommentController {
         commentService.save(comment);
         return ResponseEntity.ok().body(new Response(0, "新增成功", 0, null));
 
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Response> delete(@PathVariable Long id) {
+        commentService.remove(id);
+        return ResponseEntity.ok().body(new Response(0, "删除成功", 0, null));
     }
 }

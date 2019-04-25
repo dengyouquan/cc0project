@@ -54,6 +54,9 @@ public class MVCConfig implements WebMvcConfigurer {
 
         registry.addViewController("/admin/resource").setViewName("/resourcemanagement");
         registry.addViewController("/admin/comment").setViewName("/commentmanagement");
+
+        registry.addViewController("/user/resource/management").setViewName("/userresourcemanagement");
+        registry.addViewController("/user/comment/management").setViewName("/usercommentmanagement");
     }
 
 

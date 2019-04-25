@@ -9,6 +9,11 @@ public interface ResourceService extends BaseModelService<Resource> {
 
     int getCountByStatus(int status);
 
+    int getCountByUserId(long userId);
 
-    List<Resource> findAll(Integer pageNum, Integer pageSize, Integer status);
+    List<Resource> findAllByStatus(Integer pageNum, Integer pageSize, int status);
+
+    List<Resource> findAllByUserId(Integer pageNum, Integer pageSize, long userId);
+
+    List<Resource> findAllByUserIdAndStatus(Integer pageNum, Integer pageSize, Long userId, Integer status);
 }

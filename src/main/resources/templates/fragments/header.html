@@ -29,6 +29,17 @@
     <a href="/index" class="header item">
         <img class="logo" src="/favicon.ico"> CC0资源
     </a>
+    <div sec:authorize="hasRole('ADMIN')" class="item right">
+        <div class="ui simple dropdown" style="padding-right: 20px">
+            控制台
+            <div class="menu">
+                <a sec:authorize="hasRole('ADMIN')" class="item" href="/admin/resource"
+                   th:action="@{/admin/resource}">资源审核</a>
+                <!--<a sec:authorize="hasRole('ADMIN')" class="item" href="/admin/comment"
+                   th:action="@{/admin/comment}">评论审核</a>-->
+            </div>
+        </div>
+    </div>
     <div class="right menu">
         <!--<div class="item">
             <div class="ui transparent inverted icon input">
@@ -51,11 +62,10 @@
                 <div class="menu">
                     <a class="item" href="/usermessage" th:action="@{/usermessage}">用户信息</a>
                     <a class="item" href="/userspace" th:action="@{/userspace}">个人空间</a>
-                    <a sec:authorize="hasRole('ADMIN')" class="item" href="/admin/resource"
-                       th:action="@{/admin/resource}">资源管理</a>
-                    <a sec:authorize="hasRole('ADMIN')" class="item" href="/admin/comment"
-                       th:action="@{/admin/comment}">评论管理</a>
-                    <!-- <a class="item uploadcourse" href="/api/image/add" th:action="@{/api/image/add}">上传图片</a>-->
+                    <a class="item" href="/user/resource/management"
+                       th:action="@{/user/resource/management}">资源管理</a>
+                    <a class="item" href="/user/comment/management"
+                       th:action="@{/user/comment/management}">评论管理</a>
                     <a class="item uploadcourse" href="/api/resource/add" th:action="@{/api/resource/add}">上传资源</a>
                 </div>
             </div>

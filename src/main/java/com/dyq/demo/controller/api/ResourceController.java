@@ -13,6 +13,7 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -58,13 +59,27 @@ public class ResourceController {
         return ResponseEntity.ok().build();
     }
 
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping("/user")
+    public ResponseEntity<Response> getAllByUser(@RequestParam(value = "page", required = false, defaultValue = "1") int pageIndex,
+                                                 @RequestParam(value = "limit", required = false, defaultValue = "10") int pageSize) {
+        List<Resource> resourceList;
+        int resourceNum;
+        User user = userService.getUserByPrincipal();
+        resourceList = resourceService.findAllByUserId(pageIndex, pageSize, user.getId());
+        resourceNum = resourceService.getCountByUserId(user.getId());
+        // todo 可以通过pageHelper的PageInfo得到总数量
+        System.out.println("resourceNum:" + resourceNum);
+        return ResponseEntity.ok().body(new Response(0, "资源列表", resourceNum, resourceList));
+    }
+
     @GetMapping("/list")
     public ResponseEntity<Response> getAll(@RequestParam(value = "page", required = false, defaultValue = "1") int pageIndex,
                                            @RequestParam(value = "limit", required = false, defaultValue = "10") int pageSize, @RequestParam(value = "status", required = false, defaultValue = "-2") int status) {
         List<Resource> resourceList;
         int resourceNum;
         if (status != -2) {
-            resourceList = resourceService.findAll(pageIndex, pageSize, status);
+            resourceList = resourceService.findAllByStatus(pageIndex, pageSize, status);
             resourceNum = resourceService.getCountByStatus(status);
         } else {
             resourceList = resourceService.findAll(pageIndex, pageSize);
@@ -95,6 +110,16 @@ public class ResourceController {
         model.addAttribute("resource", resource);
         model.addAttribute("esResource", esResource);
         return "/resourceDetail";
+    }
+
+    @PutMapping(value = "/{id}/enable")
+    public ResponseEntity<Response> enabled(@PathVariable Long id) {
+        Resource resource = resourceService.findById(id);
+        if (resource != null) {
+            resource.setIsEnabled(false);
+            resourceService.save(resource);
+        }
+        return ResponseEntity.ok().body(new Response());
     }
 
     @DeleteMapping(value = "/{id}")

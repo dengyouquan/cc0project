@@ -35,12 +35,7 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public List<Comment> findAll(Integer pageNum, Integer pageSize) {
-        if (pageNum != null && pageSize != null) {
-            PageHelper.startPage(pageNum, pageSize);
-        }
-        Comment comment = Comment.getNullComment();
-        comment.setEnabled(true);
-        return commentRepository.select(comment);
+        return findAllByUserId(pageNum, pageSize, null);
     }
 
     @Override
@@ -55,10 +50,29 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
+    public List<Comment> findAllByUserId(Integer pageNum, Integer pageSize, Long userId) {
+        if (pageNum != null && pageSize != null) {
+            PageHelper.startPage(pageNum, pageSize);
+        }
+        Comment comment = Comment.getNullComment();
+        comment.setEnabled(true);
+        comment.setUserId(userId);
+        return commentRepository.select(comment);
+    }
+
+    @Override
     public long countByResourceId(Long resourceId) {
         Comment comment = Comment.getNullComment();
         comment.setEnabled(true);
         comment.setResourceId(resourceId);
+        return commentRepository.selectCount(comment);
+    }
+
+    @Override
+    public int countByUserId(Long userId) {
+        Comment comment = Comment.getNullComment();
+        comment.setEnabled(true);
+        comment.setUserId(userId);
         return commentRepository.selectCount(comment);
     }
 }
