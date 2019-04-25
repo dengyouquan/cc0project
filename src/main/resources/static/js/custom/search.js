@@ -12,7 +12,7 @@ function getImages(pageIndex, pageSize, type, keyword) {
 
         },
         error: function () {
-            layui.use([ 'layer'], function() {
+            layui.use(['layer'], function () {
                 let layer = layui.layer;
                 layer.msg("上传异常！");
             });
@@ -23,6 +23,11 @@ function getImages(pageIndex, pageSize, type, keyword) {
 $(function () {
     $("#searchButton").click(function () {
         var keyword = $("#searchText").val();
-        window.location.href = "/search/resource?keyword=" + keyword;
+        let search = window.location.search.split("type=");
+        let append = ""
+        if (search.length == 2) {
+            append = "&type=" + search[1];
+        }
+        window.location.href = "/search/resource?keyword=" + keyword + append;
     });
 });
