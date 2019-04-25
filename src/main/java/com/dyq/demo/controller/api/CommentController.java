@@ -4,6 +4,7 @@ import com.dyq.demo.model.Comment;
 import com.dyq.demo.model.Resource;
 import com.dyq.demo.model.ResourceStatus;
 import com.dyq.demo.model.User;
+import com.dyq.demo.sensitive.WordFilter;
 import com.dyq.demo.service.CommentService;
 import com.dyq.demo.service.ResourceService;
 import com.dyq.demo.service.UserService;
@@ -73,6 +74,7 @@ public class CommentController {
     @PostMapping
     public ResponseEntity<Response> save(@RequestParam(name = "content") String content,
                                          @RequestParam(name = "r_id") Long resourceId) {
+        content = WordFilter.doFilter(content);
         Comment comment = new Comment();
         User principal = userService.getUserByPrincipal();
         comment.setResourceId(resourceId);
