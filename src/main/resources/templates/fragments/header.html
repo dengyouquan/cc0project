@@ -23,10 +23,6 @@
             <a class="item" href="/search/resource?type=picture">图片</a>
             <a class="item" href="/search/resource?type=video">视频</a>
             <a class="item" href="/search/resource?type=other">其他</a>
-            <!--admin-->
-            <div sec:authorize ifAllGranted='ROLE_ADMIN'>
-                <a class="item" href="/users" th:action="@{/users}">控制台</a>
-            </div>
         </div>
     </div>
     <!--logo-->
@@ -55,6 +51,10 @@
                 <div class="menu">
                     <a class="item" href="/usermessage" th:action="@{/usermessage}">用户信息</a>
                     <a class="item" href="/userspace" th:action="@{/userspace}">个人空间</a>
+                    <a sec:authorize="hasRole('ADMIN')" class="item" href="/admin/resource"
+                       th:action="@{/admin/resource}">资源管理</a>
+                    <a sec:authorize="hasRole('ADMIN')" class="item" href="/admin/comment"
+                       th:action="@{/admin/comment}">评论管理</a>
                     <!-- <a class="item uploadcourse" href="/api/image/add" th:action="@{/api/image/add}">上传图片</a>-->
                     <a class="item uploadcourse" href="/api/resource/add" th:action="@{/api/resource/add}">上传资源</a>
                 </div>

@@ -8,6 +8,9 @@ import com.dyq.demo.service.ResourceService;
 import com.dyq.demo.service.UserService;
 import com.dyq.demo.util.FastDFSClientWrapper;
 import com.dyq.demo.vo.Response;
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -29,12 +32,46 @@ public class ResourceController {
     @Autowired
     private FastDFSClientWrapper dfsClient;
 
+    @ResponseBody
+    @PutMapping("/{id}/agree")
+    public ResponseEntity agree(@PathVariable Long id) {
+        System.out.println(id + "审核通过");
+        Resource resource = resourceService.findById(id);
+        if (resource != null) {
+            resource.setStatus(1);
+            resource.setIsEnabled(true);
+            resourceService.save(resource);
+        }
+        return ResponseEntity.ok().build();
+    }
+
+    @ResponseBody
+    @PutMapping("/{id}/oppose")
+    public ResponseEntity oppose(@PathVariable Long id) {
+        System.out.println(id + "审核不通过");
+        Resource resource = resourceService.findById(id);
+        if (resource != null) {
+            resource.setStatus(-1);
+            resource.setIsEnabled(false);
+            resourceService.save(resource);
+        }
+        return ResponseEntity.ok().build();
+    }
+
     @GetMapping("/list")
     public ResponseEntity<Response> getAll(@RequestParam(value = "page", required = false, defaultValue = "1") int pageIndex,
-                                           @RequestParam(value = "limit", required = false, defaultValue = "10") int pageSize) {
-        List<Resource> resourceList = resourceService.findAll(pageIndex, pageSize);
+                                           @RequestParam(value = "limit", required = false, defaultValue = "10") int pageSize, @RequestParam(value = "status", required = false, defaultValue = "-2") int status) {
+        List<Resource> resourceList;
+        int resourceNum;
+        if (status != -2) {
+            resourceList = resourceService.findAll(pageIndex, pageSize, status);
+            resourceNum = resourceService.getCountByStatus(status);
+        } else {
+            resourceList = resourceService.findAll(pageIndex, pageSize);
+            resourceNum = resourceService.getCount();
+        }
+        //status 0 未审核 -1 未通过审核 1 通过审核
         // todo 可以通过pageHelper的PageInfo得到总数量
-        int resourceNum = resourceService.getCount();
         System.out.println("resourceNum:" + resourceNum);
         return ResponseEntity.ok().body(new Response(0, "资源列表", resourceNum, resourceList));
     }

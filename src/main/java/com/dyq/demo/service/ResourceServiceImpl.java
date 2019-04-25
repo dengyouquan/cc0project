@@ -23,6 +23,22 @@ public class ResourceServiceImpl implements ResourceService {
     }
 
     @Override
+    public int getCountByStatus(int status) {
+        return resourceRepository.getCountByStatus(status);
+    }
+
+    @Override
+    public List<Resource> findAll(Integer pageNum, Integer pageSize, Integer status) {
+        if (pageNum != null && pageSize != null) {
+            PageHelper.startPage(pageNum, pageSize);
+        }
+        Resource resource = Resource.getNullResource();
+        resource.setIsEnabled(true);
+        resource.setStatus(status);
+        return resourceRepository.select(resource);
+    }
+
+    @Override
     public Resource findById(Long id) {
         return resourceRepository.selectByPrimaryKey(id);
     }
@@ -52,11 +68,6 @@ public class ResourceServiceImpl implements ResourceService {
 
     @Override
     public List<Resource> findAll(Integer pageNum, Integer pageSize) {
-        if (pageNum != null && pageSize != null) {
-            PageHelper.startPage(pageNum, pageSize);
-        }
-        Resource resource = Resource.getNullResource();
-        resource.setIsEnabled(true);
-        return resourceRepository.select(resource);
+        return findAll(pageNum, pageSize, null);
     }
 }

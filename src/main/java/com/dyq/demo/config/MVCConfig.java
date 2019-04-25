@@ -50,6 +50,10 @@ public class MVCConfig implements WebMvcConfigurer {
         registry.addViewController("/error").setViewName("error");
 
         registry.addViewController("/userspace").setViewName("userspace");
+
+
+        registry.addViewController("/admin/resource").setViewName("/resourcemanagement");
+        registry.addViewController("/admin/comment").setViewName("/commentmanagement");
     }
 
 
@@ -59,7 +63,7 @@ public class MVCConfig implements WebMvcConfigurer {
         registry.addMapping("/**");
     }
 
-/*配置http自动转为https*/
+    /*配置http自动转为https*/
 /*@Bean
 public ServletWebServerFactory servletWebServerFactory(){
     TomcatServletWebServerFactory factory = new TomcatServletWebServerFactory(){
