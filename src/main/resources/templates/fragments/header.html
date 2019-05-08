@@ -35,8 +35,10 @@
             <div class="menu">
                 <a sec:authorize="hasRole('ADMIN')" class="item" href="/admin/resource"
                    th:action="@{/admin/resource}">资源审核</a>
-                <!--<a sec:authorize="hasRole('ADMIN')" class="item" href="/admin/comment"
-                   th:action="@{/admin/comment}">评论审核</a>-->
+                <a sec:authorize="hasRole('ADMIN')" class="item" href="/admin/comment"
+                   th:action="@{/admin/comment}">评论管理</a>
+                <a sec:authorize="hasRole('ADMIN')" class="item" href="/admin/user"
+                   th:action="@{/admin/user}">用户管理</a>
             </div>
         </div>
     </div>
@@ -60,7 +62,7 @@
             <div class="ui simple dropdown" style="padding-right: 20px">
                 个人信息 <i class="dropdown icon"></i>
                 <div class="menu">
-                    <a class="item" href="/usermessage" th:action="@{/usermessage}">用户信息</a>
+                    <a class="item" href="/usermessage" th:action="@{/usermessage}">更改头像</a>
                     <a class="item" href="/userspace" th:action="@{/userspace}">个人空间</a>
                     <a class="item" href="/user/resource/management"
                        th:action="@{/user/resource/management}">资源管理</a>

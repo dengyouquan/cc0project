@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <title>资源管理</title>
+    <title>评论管理</title>
     <style>
         body {
             margin: 10px;
@@ -32,15 +32,9 @@
     var t = [
         /*{type: 'checkbox', fixed: 'left'}*/
         , {field: 'id', title: 'ID', sort: true, hide: true,}
-        , {field: 'fileName', title: '名称',}
-        , {field: 'type', title: '类型',}
-        , {field: 'description', title: '描述',}
-        , {field: 'filePath', title: '路径', hide: true}
-        , {field: 'fileSize', title: '大小',}
-        , {field: 'userId', title: '上传用户id',}
-        , {field: 'status', title: '状态',}
-        , {field: 'averageRate', title: '评分', hide: true}
-        , {field: 'edit', title: '可编辑', hide: true}
+        , {field: 'content', title: '内容', sort: true,}
+        , {field: 'resourceId', title: '资源ID', sort: true,}
+        , {field: 'userId', title: '用户ID', sort: true,}
         , {fixed: 'right', width: 400, align: 'center', toolbar: '#barDemo'}
     ];
     layui.use(['laydate', 'laypage', 'layer', 'table', 'element', 'form'], function () {
@@ -60,29 +54,29 @@
             let csrfHeader = $("meta[name='_csrf_header']").attr("content");
             if (layEvent === 'edit') {
             } else if (layEvent === 'del') {
-                layer.confirm('真的删除这个资源吗？', function (index) {
+                layer.confirm('真的删除这个评论吗？', function (index) {
                     $.ajax({
-                        url: "/api/resource/" + obj.data.id + "/enable",
-                        type: 'put',
+                        url: "/api/comment/" + obj.data.id,
+                        type: 'delete',
                         async: true,
                         dataType: 'json',
                         beforeSend: function (request) {
                             request.setRequestHeader(csrfHeader, csrfToken); // 添加CSRF Token
                         }
                     })
-                    .then(function (res) {
+                        .then(function (res) {
                             obj.del(); //删除对应行（tr）的DOM结构
                             layui.use('layer', function () {
                                 var layer = layui.layer;
                                 layer.msg('删除成功', {offset: 'lb'});
                             });
                         })
-                    .fail(function () {
-                        layui.use(['layer'], function () {
+                        .fail(function () {
+                            layui.use(['layer'], function () {
                                 let layer = layui.layer;
                                 layer.msg("删除失败！");
                             });
-                    })
+                        })
                     layer.close(index);
                 });
             }
@@ -101,8 +95,8 @@
                 table.render({
                     elem: '#demo'
                     , id: 'testReload'
-                    , url: '/api/resource/user'
-                    , title: '资源管理表'
+                    , url: '/api/comment/all'
+                    , title: '评论管理表'
                     , page: true //开启分页
                     /* , toolbar: 'default' //开启工具栏，此处显示默认图标，可以自定义模板，详见文档*/
                     //, toolbar: true

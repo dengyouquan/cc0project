@@ -75,6 +75,7 @@ public class RegisterConroller {
         user.setAvatar("/images/avatar/large/elliot.jpg");
         if(user.getId() == null) {
             user.setEncodePassword(user.getPassword()); // 加密密码
+            user.setSex(1); // 性别男
         }else {
             User originalUser = userService.findById(user.getId());
             //重新赋值create_at

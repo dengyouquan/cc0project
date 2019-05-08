@@ -20,24 +20,7 @@
         </ul>
         <div class="layui-tab-content">
             <div class="layui-tab-item layui-show">
-                <table class="layui-table">
-                    <thead>
-                    <tr>
-                        <th>用户名</th>
-                        <th>账号</th>
-                        <th>手机号</th>
-                        <th>邮箱</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr>
-                        <td>{{user.name}}</td>
-                        <td>{{user.username}}</td>
-                        <td>{{user.tel}}</td>
-                        <td>{{user.email}}</td>
-                    </tr>
-                    </tbody>
-                </table>
+                <div id="view"></div>
                 <button class="layui-btn layui-btn-normal" @click="updateUserInfo">更新个人信息</button>
             </div>
             <div class="layui-tab-item">
@@ -113,6 +96,20 @@
             </div>
         </div>
         <div class="layui-form-item">
+            <label class="layui-form-label">简介:</label>
+            <div class="layui-input-block">
+                <input type="text" name="introduction" placeholder="请输入简介" autocomplete="off" class="layui-input"
+                       lay-verify="" :value="user.introduction">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">性别0(女),1(男):</label>
+            <div class="layui-input-block">
+                <input type="text" name="sex" placeholder="请输入性别0(女),1(男)" autocomplete="off" class="layui-input"
+                       lay-verify="sex" :value="user.sex">
+            </div>
+        </div>
+        <div class="layui-form-item">
             <div class="layui-input-block">
                 <button class="layui-btn" lay-submit lay-filter="updateSubmit">提交</button>
             </div>
@@ -122,6 +119,36 @@
 <!--footer-->
 <div th:replace="~{/fragments/footer::footer}"></div>
 </body>
+<script id="demo" type="text/html">
+
+    <table class="layui-table">
+        <thead>
+        <tr>
+            <th>用户名</th>
+            <th>账号</th>
+            <th>手机号</th>
+            <th>邮箱</th>
+            <th>性别</th>
+            <th>简介</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td>{{d.name}}</td>
+            <td>{{d.username}}</td>
+            <td>{{d.tel}}</td>
+            <td>{{d.email}}</td>
+            <td>{{# if(d.sex==0){ }}
+                女
+                {{# } else { }}
+                男
+                {{# } }}
+            </td>
+            <td>{{d.introduction}}</td>
+        </tr>
+        </tbody>
+    </table>
+</script>
 <script>
     var app = new Vue({
         el: '#app',
@@ -160,12 +187,14 @@
                         content: $('#updateUserInfo'),
                         success: function (layero, index) {
                             $("#updateUserInfo").css("display", "block");
-                            console.log(self.user);
+                            //console.log(self.user);
                             form.on('submit(updateSubmit)', function (e) {
                                 var data = {}
                                 data.name = $("input[name='name']").val();
                                 data.tel = $("input[name='tel']").val();
                                 data.email = $("input[name='email']").val();
+                                data.sex = $("input[name='sex']").val();
+                                data.introduction = $("input[name='introduction']").val();
                                 //console.log(data);
                                 $.ajax({
                                     url: '/api/user/' + self.user.id,
@@ -176,7 +205,6 @@
                                     },
                                     contentType: 'application/json',
                                     success: function (res) {
-                                        alert("cuss")
                                         layui.use('layer', function () {
                                             var layer = layui.layer;
                                             layer.msg('更新用户信息成功', {offset: 'lb'});
@@ -186,7 +214,6 @@
                                         layer.close(index);
                                     },
                                     fail: function (res) {
-                                        alert("cuss")
                                         layui.use('layer', function () {
                                             var layer = layui.layer;
                                             layer.msg('更新用户信息失败', {offset: 'lb'});
@@ -213,63 +240,86 @@
                 dataType: 'json'
             }).then(function (res) {
                 self.user = res;
-                console.log(self.user)
+                //console.log(self.user)
+                layui.use(['form', 'element', 'laytpl'], function () {
+                    var form = layui.form
+                        , layer = layui.layer,
+                        laytpl = layui.laytpl;
+                    //渲染模板引擎
+                    var data = { //数据
+                        "name": self.user.name,
+                        "username": self.user.username,
+                        "tel": self.user.tel,
+                        "email": self.user.email,
+                        "sex": self.user.sex,
+                        "introduction": self.user.introduction
+                    }
+                    //console.log(self.user)
+                    //console.log(data)
+                    var getTpl = demo.innerHTML
+                        , view = document.getElementById('view');
+                    laytpl(getTpl).render(data, function (html) {
+                        view.innerHTML = html;
+                    });
+
+                    var password;
+                    //自定义验证规则
+                    form.verify({
+                        oldPassword: function (value) {
+                            self.password.oldPassword = value;
+                        },
+                        password1: function (value) {
+                            password = value;
+                        },
+                        sex: function (value) {
+                            if ("0" != value && "1" != value) {
+                                return "性别只能为0(女),1(男)"
+                            }
+                        },
+                        password2: function (value) {
+                            if (password != value) {
+                                return "两次输入密码不一致"
+                            }
+                            self.password.updatePassword = value;
+                        }
+                    });
+
+                    form.on('submit(updatePassword)', function (data) {
+                        $.ajax({
+                            url: '/api/user/updatePassword',
+                            type: 'put',
+                            contentType: 'application/json',
+                            data: JSON.stringify(self.password),
+                            beforeSend: function (request) {
+                                request.setRequestHeader(csrfHeader, csrfToken); // 添加CSRF Token
+                            },
+                            dataType: 'json'
+                        }).then(function (res) {
+                            layui.use('layer', function () {
+                                var layer = layui.layer;
+                                if (res) {
+                                    layer.msg('更新密码成功', {offset: 'lb'});
+                                    //csrf 不能用get
+                                    //window.location.href = "/logout"
+                                    setTimeout(function () {
+                                        window.location.href = "/login";
+                                    }, 500)
+                                } else {
+                                    layer.msg('原始密码错误', {offset: 'lb'});
+                                }
+                            });
+                        }).fail(function () {
+                            console.log('request fail');
+                            layui.use('layer', function () {
+                                var layer = layui.layer;
+                                layer.msg('更新密码失败', {offset: 'lb'});
+                            });
+                        });
+                        return false;
+                    });
+                });
             }).fail(function () {
                 console.log('request userinfo fail');
-            });
-            layui.use(['form', 'element'], function () {
-                var form = layui.form
-                    , layer = layui.layer;
-                var password;
-                //自定义验证规则
-                form.verify({
-                    oldPassword: function (value) {
-                        self.password.oldPassword = value;
-                    },
-                    password1: function (value) {
-                        password = value;
-                    },
-                    password2: function (value) {
-                        if (password != value) {
-                            return "两次输入密码不一致"
-                        }
-                        self.password.updatePassword = value;
-                    }
-                });
-
-                form.on('submit(updatePassword)', function (data) {
-                    $.ajax({
-                        url: '/api/user/updatePassword',
-                        type: 'put',
-                        contentType: 'application/json',
-                        data: JSON.stringify(self.password),
-                        beforeSend: function (request) {
-                            request.setRequestHeader(csrfHeader, csrfToken); // 添加CSRF Token
-                        },
-                        dataType: 'json'
-                    }).then(function (res) {
-                        layui.use('layer', function () {
-                            var layer = layui.layer;
-                            if (res) {
-                                layer.msg('更新密码成功', {offset: 'lb'});
-                                //csrf 不能用get
-                                //window.location.href = "/logout"
-                                setTimeout(function () {
-                                    window.location.href = "/login";
-                                }, 500)
-                            } else {
-                                layer.msg('原始密码错误', {offset: 'lb'});
-                            }
-                        });
-                    }).fail(function () {
-                        console.log('request fail');
-                        layui.use('layer', function () {
-                            var layer = layui.layer;
-                            layer.msg('更新密码失败', {offset: 'lb'});
-                        });
-                    });
-                    return false;
-                });
             });
         }
     });

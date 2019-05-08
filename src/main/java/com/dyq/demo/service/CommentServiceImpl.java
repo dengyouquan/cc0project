@@ -75,4 +75,11 @@ public class CommentServiceImpl implements CommentService {
         comment.setUserId(userId);
         return commentRepository.selectCount(comment);
     }
+
+    @Override
+    public int countAll() {
+        Comment comment = Comment.getNullComment();
+        comment.setEnabled(true);
+        return commentRepository.selectCount(comment);
+    }
 }

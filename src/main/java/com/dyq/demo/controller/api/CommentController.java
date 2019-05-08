@@ -46,6 +46,18 @@ public class CommentController {
         return ResponseEntity.ok().body(new Response(0, "评论列表", commentNum, commentList));
     }
 
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping("/all")
+    public ResponseEntity<Response> getAll(@RequestParam(value = "page", required = false, defaultValue = "1") int pageIndex,
+                                           @RequestParam(value = "limit", required = false, defaultValue = "10") int pageSize) {
+        User user = userService.getUserByPrincipal();
+        List<Comment> commentList = commentService.findAll(pageIndex, pageSize);
+        int commentNum = commentService.countAll();
+        // todo 可以通过pageHelper的PageInfo得到总数量
+        System.out.println("resourceNum:" + commentNum);
+        return ResponseEntity.ok().body(new Response(0, "评论列表", commentNum, commentList));
+    }
+
     @GetMapping
     public String comment(Model model,
                           @RequestParam(value = "async", required = false) boolean async,

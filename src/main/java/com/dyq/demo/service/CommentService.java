@@ -13,4 +13,6 @@ public interface CommentService extends BaseModelService<Comment> {
     long countByResourceId(Long resourceId);
 
     int countByUserId(Long userId);
+
+    int countAll();
 }
