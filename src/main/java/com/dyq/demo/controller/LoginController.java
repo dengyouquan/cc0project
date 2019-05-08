@@ -363,4 +363,14 @@ public class LoginController {
             return ResponseEntity.ok().body(new Response(0, "ok", 0, true));
         }
     }
+
+    @PostMapping("/saveavatar")
+    public ResponseEntity<Response> saveavatar(@RequestParam("avatarPath") String avatarPath) {
+        User user = userService.getUserByPrincipal();
+        user.setAvatar(avatarPath);
+        System.out.println(user);
+        userService.save(user);
+        //返回json
+        return ResponseEntity.ok().body(new Response(0, "保存头像成功", 0, ""));
+    }
 }
