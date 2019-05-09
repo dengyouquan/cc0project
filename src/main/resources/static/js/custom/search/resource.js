@@ -16,11 +16,13 @@ layui.use('flow', function () {
             $.get('/search/resource/list' + keyword + '&page=' + page + '&limit=10', function (res) {
                 //假设你的列表返回在data集合中
                 layui.each(res.data, function (index, item) {
+                    var examine = item.status == 0 ? "未审核" : "已审核"
                     if (item.type == "picture") {
                         lis.push('<div class="column"  style="cursor: pointer;" onclick="window.open(\'/api/resource/' + item.esdocumentId + '?keyword=' + item.fileName + '\',\'_self\')">\n' +
                             '                    <div class="ui fluid card">\n' +
                             '                        <div class="image">\n' +
-                            '                            <p>' + item.type + '</p>\n' +
+                            '                            <span style="margin-left: 3%">' + item.type + '</span>\n' +
+                            '                            <p style="float: right;margin-right: 3%">' + examine + '</p>' +
                             '<img src="' + item.filePath + '">' +
                             '                        </div>\n' +
                             '                        <div class="content">\n' +
@@ -32,7 +34,8 @@ layui.use('flow', function () {
                         lis.push('<div class="column"  style="cursor: pointer;" onclick="window.open(\'/api/resource/' + item.esdocumentId + '?keyword=' + item.fileName + '\',\'_self\')">\n' +
                             '                    <div class="ui fluid card">\n' +
                             '                        <div class="image">\n' +
-                            '                            <p>' + item.type + '</p>\n' +
+                            '                            <span style="margin-left: 3%">' + item.type + '</span>\n' +
+                            '                            <p style="float: right;margin-right: 3%">' + examine + '</p>' +
                             ' <img  src="/images/resource/' + item.type + '.jpg">' +
                             '                        </div>\n' +
                             '                        <div class="content">\n' +
