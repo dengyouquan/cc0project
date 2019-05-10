@@ -67,8 +67,8 @@ public class LoginController {
         user.setAvatar("/images/avatar/large/elliot.jpg");
         user.setIntegral(0);
         user.setFailtime(0);
-        user.setName("文思小白");
-        user.setSex(0);
+        user.setName("CC0小白");
+        user.setSex(1);
         if (user.getId() == null) {
             user.setEncodePassword(user.getPassword()); // 加密密码
         } else {
