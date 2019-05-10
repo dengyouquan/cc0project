@@ -39,6 +39,7 @@
                     <div class="content">
                         <span hidden id="esDocumentId" th:text="${resource.id}"></span>
                         <a class="header" th:text="${resource.fileName}">丹尼尔 路易斯</a>
+                        <span style="float: right;margin-right: 3%" th:text="${resource.status}==0?'未审核':'已审核'"></span>
                         <div class="description">描述：<span th:text="${resource.description}"></span></div>
                     </div>
                     <div class="extra content">
