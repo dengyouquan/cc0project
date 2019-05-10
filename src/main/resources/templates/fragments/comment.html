@@ -40,7 +40,7 @@
                     <div class="metadata">
                                 <span class="date">
                                     <span class="layui-word-aux need-time-ago"
-                                          th:text="${resourceComment.createdAt}"></span>
+                                          th:text="${#calendars.format(resourceComment.createdAt,'yyyy-MM-dd HH:mm')}"></span>
                                 </span>
                     </div>
                     <div class="text" th:text="${resourceComment.content}">太赞了！</div>
