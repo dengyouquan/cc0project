@@ -69,7 +69,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/api/user/**").authenticated()
                 .antMatchers(
                         //URL
-                        "/index", "/", "/login/**", "/check/**", "/register/**", "/index",
+                        "/index", "/", "/help", "/login/**", "/check/**", "/register/**", "/index",
                         "/services/**", "/api/**", "/search/**"
                         //static
                         , "/css/**", "/js/**", "/layui/**", "/layer/**", "/semantic/**", "/images/**",

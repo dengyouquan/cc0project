@@ -25,10 +25,6 @@ public class MVCConfig implements WebMvcConfigurer {
     public void addViewControllers(ViewControllerRegistry registry) {
         registry.addViewController("/").setViewName("index");
         registry.addViewController("/index").setViewName("index");
-        registry.addViewController("/course").setViewName("course");
-        registry.addViewController("/course/main").setViewName("coursedetail");
-        registry.addViewController("/course/study").setViewName("courseLearn");
-        registry.addViewController("/course/list").setViewName("courses");
         //登录视图映射
         //registry.addViewController("/api/login").setViewName("login/login");
         registry.addViewController("/login/reg").setViewName("login/reg");
@@ -50,6 +46,7 @@ public class MVCConfig implements WebMvcConfigurer {
         registry.addViewController("/error").setViewName("error");
 
         registry.addViewController("/userspace").setViewName("userspace");
+        registry.addViewController("/help").setViewName("help");
 
 
         registry.addViewController("/admin/resource").setViewName("/resourcemanagement");
