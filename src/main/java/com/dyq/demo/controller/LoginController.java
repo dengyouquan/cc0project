@@ -34,11 +34,14 @@ import javax.validation.ConstraintViolationException;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Random;
 
 @Controller
 public class LoginController {
     private static final Logger LOGGER = LoggerFactory.getLogger(LoginController.class);
+    private static final String DEFAULT_MESSAGE_VERIFY_CODE = "000000";
     @Autowired
     DefaultKaptcha defaultKaptcha;
     @Autowired
@@ -48,6 +51,7 @@ public class LoginController {
     @Autowired
     @Qualifier("authenticationManagerBean")
     AuthenticationManager authenticationManager;
+    private static final long VALID_MESSAGE_TIME = 1 * 60 * 1000;//五分钟有效期
 
     @GetMapping("/usermessage")
     public String userspace(Model model) {
@@ -238,11 +242,13 @@ public class LoginController {
 
     @PostMapping("/login/phoneCode")
     public ResponseEntity<Response> phoneCode(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) {
-        String phoneCode = "111111";
+        String phoneCode = String.valueOf(new Random().nextInt(899999) + 100000);
+        //String phoneCode = "111111";
         //得到请求参数
         String phone = httpServletRequest.getParameter("phone");
         httpServletRequest.getSession().setAttribute(phone, phoneCode);
-        System.out.println("phone:" + phone + ",phoneCode:" + httpServletRequest.getSession().getAttribute(phone));
+        httpServletRequest.getSession().setAttribute(phone + "date", new Date().getTime() + VALID_MESSAGE_TIME);
+        System.out.println("phone:" + phone + ",phoneCode:" + httpServletRequest.getSession().getAttribute(phone) + "有效时间：" + httpServletRequest.getSession().getAttribute(phone + "date"));
         return ResponseEntity.ok().body(new Response(0, "ok", 0, true));
     }
 
@@ -254,6 +260,10 @@ public class LoginController {
         String pcode = httpServletRequest.getParameter("pcode");
         //从session中得到
         String phoneCode = (String) httpServletRequest.getSession().getAttribute(phone);
+        Long phoneCodeTime = (Long) httpServletRequest.getSession().getAttribute(phone + "date");
+        if (phoneCodeTime == null) {
+            phoneCodeTime = 0L;
+        }
         User user = (User) httpServletRequest.getSession().getAttribute(phone + "user");
         System.out.println("Session  pcode:" + pcode + " phone:" + phone + " form phoneCode:" + phoneCode + ",user" + user);
         /*Optional<User> userOptional = userService.findByTel(phone);
@@ -261,7 +271,10 @@ public class LoginController {
         if(userOptional.isPresent()){
             user = userOptional.get();
         }*/
-        if (pcode.equals(phoneCode)) {
+        //判断验证码是否在有效期内
+        if (pcode.equals(phoneCode) && new Date().getTime() < phoneCodeTime) {
+            //设置为默认值，不让多次使用验证码
+            httpServletRequest.getSession().setAttribute(phone, DEFAULT_MESSAGE_VERIFY_CODE);
             return ResponseEntity.ok().body(new Response(0, "ok", 0, true));
         } else {
             return ResponseEntity.ok().body(new Response(0, "ok", 0, false));

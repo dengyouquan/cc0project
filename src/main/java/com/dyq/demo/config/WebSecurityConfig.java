@@ -102,7 +102,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .rememberMeCookieName("cc0project")
                 .and()
                 //上传接口不知道怎么加token,logout用csrf，然后只能用post请求
-                .csrf().ignoringAntMatchers("/h2-console/**", "/upload/image", "/uploadfile", "/services/**", "/logout")
+                .csrf().ignoringAntMatchers("/h2-console/**", "/upload/image", "/uploadfile", "/services/**", "/logout", "/login/**")
                 .and()
                 //只允许一个用户登录,如果同一个账户两次登录,那么第一个账户将被踢下线,跳转到登录页面
                 .sessionManagement().maximumSessions(1).expiredUrl("/login");
