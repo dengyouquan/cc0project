@@ -34,15 +34,26 @@
                     <div class="ui fluid card">
                         <div class="image">
                             <img th:if="${not #strings.equals('picture', resource.type)}"
-                                 src="/images/avatar/large/daniel.jpg" th:src="'/images/resource/'+${resource.type}+'.jpg'">
+                                 src="/images/avatar/large/daniel.jpg"
+                                 th:src="'/images/resource/'+${resource.type}+'.jpg'">
                             <img th:if="${#strings.equals('picture', resource.type)}"
                                  src="/images/avatar/large/daniel.jpg" th:src="${resource.filePath}">
                         </div>
                         <div class="content">
                             <span hidden id="esDocumentId" th:text="${resource.id}"></span>
                             <a class="header" th:text="${resource.fileName}">丹尼尔 路易斯</a>
-                            <span style="float: right;margin-right: 3%" th:text="${resource.status}==0?'未审核':'已审核'"></span>
-                            <div class="description">描述：<span th:text="${resource.description}"></span></div>
+                            <br/>
+                            <div>
+                                <span id="resourceType" th:text="${resource.type}"></span>
+                                <span style="float: right;margin-right: 3%"
+                                      th:text="${resource.status}==0?'未审核':'已审核'"></span>
+
+                            </div>
+                            <br/>
+                            <div class="description">
+                                描述：<span th:text="${resource.description}"></span>
+                            </div>
+
                         </div>
                         <div class="extra content">
                             <div id="resourceRateDiv">
@@ -257,6 +268,8 @@
                     let rate = layui.rate;
                     let layer = layui.layer;
 
+                    //得到当前资源类型
+                    let resourceType = $("#resourceType").text();
                     flow.load({
                         elem: '#loadResourceDetail' //流加载容器
                         , scrollElem: '#loadResourceDetail' //滚动条所在元素，一般不用填，此处只是演示需要。
@@ -270,7 +283,7 @@
                             let r_id = arr[arr.length - 1];
                             //alert(r_id);
                             //以jQuery的Ajax请求为例，请求下一页数据（注意：page是从2开始返回）
-                            $.get('/search/resource/list' + keyword + '&page=' + page + '&limit=3&relate_recommend=true&r_id=' + r_id, function (res) {
+                            $.get('/search/resource/list' + keyword + '&page=' + page + '&limit=3&relate_recommend=true&r_id=' + r_id + '&type=' + resourceType, function (res) {
                                 //假设你的列表返回在data集合中
                                 layui.each(res.data, function (index, item) {
                                     if (item.type == "picture") {
