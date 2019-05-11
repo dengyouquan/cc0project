@@ -26,51 +26,54 @@
 <div style="margin-top: 10%;margin-bottom: 5%;margin-right: 0%!important;margin-left: 0%!important" id="app">
     <!--<ul class="flow-default" id="loadResource"></ul>-->
     <!--图片项目-->
-    <div style="margin-top: 5%;margin-left: 10%;margin-right: 10%">
-        <div class="ui one column grid">
-            <div class="column">
-                <div class="ui fluid card">
-                    <div class="resource">
-                        <img th:if="${not #strings.equals('picture', resource.type)}"
-                             src="/images/avatar/large/daniel.jpg" th:src="'/images/resource/'+${resource.type}+'.jpg'">
-                        <img th:if="${#strings.equals('picture', resource.type)}"
-                             src="/images/avatar/large/daniel.jpg" th:src="${resource.filePath}">
-                    </div>
-                    <div class="content">
-                        <span hidden id="esDocumentId" th:text="${resource.id}"></span>
-                        <a class="header" th:text="${resource.fileName}">丹尼尔 路易斯</a>
-                        <span style="float: right;margin-right: 3%" th:text="${resource.status}==0?'未审核':'已审核'"></span>
-                        <div class="description">描述：<span th:text="${resource.description}"></span></div>
-                    </div>
-                    <div class="extra content">
-                        <div id="resourceRateDiv">
-                            <span>评分：</span>
-                            <div id="resourceRate"></div>
+    <div class="ui card center"
+         style="margin-top: 10%;margin-left: 10%;margin-right: 10%;margin-bottom: 10%;width: 80%;">
+        <div class="content">
+            <div class="ui one column grid">
+                <div class="column">
+                    <div class="ui fluid card">
+                        <div class="image">
+                            <img th:if="${not #strings.equals('picture', resource.type)}"
+                                 src="/images/avatar/large/daniel.jpg" th:src="'/images/resource/'+${resource.type}+'.jpg'">
+                            <img th:if="${#strings.equals('picture', resource.type)}"
+                                 src="/images/avatar/large/daniel.jpg" th:src="${resource.filePath}">
                         </div>
-                        <div v-if="isRate">
-                            <span>你的评分：</span>
-                            <div id="yourRate"></div>
+                        <div class="content">
+                            <span hidden id="esDocumentId" th:text="${resource.id}"></span>
+                            <a class="header" th:text="${resource.fileName}">丹尼尔 路易斯</a>
+                            <span style="float: right;margin-right: 3%" th:text="${resource.status}==0?'未审核':'已审核'"></span>
+                            <div class="description">描述：<span th:text="${resource.description}"></span></div>
                         </div>
-                        <div>
-                        </div>
+                        <div class="extra content">
+                            <div id="resourceRateDiv">
+                                <span>评分：</span>
+                                <div id="resourceRate"></div>
+                            </div>
+                            <div v-if="isRate">
+                                <span>你的评分：</span>
+                                <div id="yourRate"></div>
+                            </div>
+                            <div>
+                            </div>
 
-                        <div>
-                            共<span th:text="${resource.totalRateNum}"></span>人评分
-                            <span style="float: right;margin-right: 1%">
+                            <div>
+                                共<span th:text="${resource.totalRateNum}"></span>人评分
+                                <span style="float: right;margin-right: 1%">
                                 平均评分:
                             <span th:text="${resource.averageRate}"></span>/5
                             </span>
-                        </div>
-                        <br/><br/>
-                        <span style="margin-left: 1%" th:text="${resource.type}"></span>
-                        <span style="float: right;margin-right: 1%"><span
-                                th:text="${resource.fileSize}"></span>KB</span><br/><br/><br/>
-                        <a style="margin-left: 1%" th:href="@{/services/resource/}+${resource.id}">下载</a>
-                        <a id="download" style="float: right;margin-right: 1%" th:href="${resource.filePath}"
-                           th:download="${resource.fileName}+.+${resource.fileFormat}">预览</a>
-                        <!--href="/download/image/?8"-->
-                        <!--<a style="float: right" th:href="@{/download/image/}+${image.id}">下载</a>-->
+                            </div>
+                            <br/><br/>
+                            <span style="margin-left: 1%" th:text="${resource.type}"></span>
+                            <span style="float: right;margin-right: 1%"><span
+                                    th:text="${resource.fileSize}"></span>KB</span><br/><br/><br/>
+                            <a style="margin-left: 1%" th:href="@{/services/resource/}+${resource.id}">下载</a>
+                            <a id="download" style="float: right;margin-right: 1%" th:href="${resource.filePath}"
+                               th:download="${resource.fileName}+.+${resource.fileFormat}">预览</a>
+                            <!--href="/download/image/?8"-->
+                            <!--<a style="float: right" th:href="@{/download/image/}+${image.id}">下载</a>-->
 
+                        </div>
                     </div>
                 </div>
             </div>
