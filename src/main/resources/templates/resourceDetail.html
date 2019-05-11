@@ -66,7 +66,7 @@
                         <span style="float: right;margin-right: 1%"><span
                                 th:text="${resource.fileSize}"></span>KB</span><br/><br/><br/>
                         <a style="margin-left: 1%" th:href="@{/services/resource/}+${resource.id}">下载</a>
-                        <a id="download" style="float: right;margin-right: 1%" th:url="${resource.filePath}"
+                        <a id="download" style="float: right;margin-right: 1%" th:href="${resource.filePath}"
                            th:download="${resource.fileName}+.+${resource.fileFormat}">预览</a>
                         <!--href="/download/image/?8"-->
                         <!--<a style="float: right" th:href="@{/download/image/}+${image.id}">下载</a>-->
@@ -201,7 +201,6 @@
     $(function () {
         var t = $("#download");
         t.click(function () {
-            alert("111")
             var FileSaver = require('file-saver');
             FileSaver.saveAs("http://127.0.0.1:8080/js/Blob.js", "Blob.js");
             //FileSaver.saveAs(t.attr("href"), t.attr("download"));
