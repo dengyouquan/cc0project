@@ -43,19 +43,17 @@ public class SearchController {
                                                     @RequestParam(value = "limit", required = false, defaultValue = "10") int pageSize,
                                                     @RequestParam(value = "type", required = false, defaultValue = "all") String type,
                                                     @RequestParam(value = "keyword", required = false, defaultValue = "") String keyword,
-                                                    @RequestParam(value = "contain_self", required = false, defaultValue = "true") Boolean containSelf,
+                                                    @RequestParam(value = "relate_recommend", required = false, defaultValue = "false") Boolean relateRecommend,
                                                     @RequestParam(value = "r_id", required = false, defaultValue = "0") Long r_id) {
         //keyword = CharacterFilter.keywordFilter(keyword);
         List<ESResource> esResourceList = esResourceService.findAll(type, keyword, pageIndex, pageSize).getContent();
         long esResourceNum = esResourceService.count();
-        int preSize = esResourceList.size();
-        //是否包含自身
-        if (!containSelf) {
-            esResourceList = esResourceList.stream().filter(esResource -> !esResource.getEsdocumentId().equals(r_id)).collect(Collectors.toList());
-        }
-        int nextSize = esResourceList.size();
-        if (nextSize == preSize - 1) {
-            esResourceNum--;
+        //相关推荐
+        if (relateRecommend) {
+            //最多推荐3个
+            esResourceList = esResourceList.stream().filter(esResource -> !esResource.getEsdocumentId().equals(r_id)).limit(3).collect(Collectors.toList());
+            //推荐相关资源不让加载更多
+            esResourceNum = esResourceList.size();
         }
         System.out.println("esResourceList:" + esResourceList);
         System.out.println("esResourceNum:" + esResourceNum);

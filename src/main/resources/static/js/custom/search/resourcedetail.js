@@ -16,7 +16,7 @@ layui.use(['flow', 'rate'], function () {
             let r_id = arr[arr.length - 1];
             //alert(r_id);
             //以jQuery的Ajax请求为例，请求下一页数据（注意：page是从2开始返回）
-            $.get('/search/resource/list' + keyword + '&page=' + page + '&limit=10&contain_self=false&r_id=' + r_id, function (res) {
+            $.get('/search/resource/list' + keyword + '&page=' + page + '&limit=3&relate_recommend=true&r_id=' + r_id, function (res) {
                 //假设你的列表返回在data集合中
                 layui.each(res.data, function (index, item) {
                     if (item.type == "picture") {
