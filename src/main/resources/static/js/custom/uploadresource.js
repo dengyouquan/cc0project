@@ -4,12 +4,13 @@ layui.config({
     jquery_common_setting: '/js/custom/jquery_common_setting' // jquery_common_setting.js所在目录,token权限校验
 });
 
-layui.use(['jquery_common_setting', 'form', 'upload'], function () {
+layui.use(['jquery_common_setting', 'form', 'upload', 'element'], function () {
     var form = layui.form
         , layer = layui.layer
         , $ = layui.jquery
-        , upload = layui.upload;
-
+        , upload = layui.upload
+        , element = layui.element;
+    element.init();
     $.ajaxSetup({
         // 同步
         async: true, // 默认true，异步
@@ -46,7 +47,7 @@ layui.use(['jquery_common_setting', 'form', 'upload'], function () {
         elem: '#resourceUpload'
         //,url: '/uploadfile'
         , accept: 'file'
-        , exts: 'zip|rar|7z|jpg|png|gif|bmp|jpeg|mp3|wmv|mp4|avi|rmvb'
+        , exts: 'zip|rar|7z|jpg|png|gif|bmp|jpeg|mp3|wav|wmv|mp4|avi|rmvb'
         , url: '/services/resource'
         , before: function (obj) {
             //预读本地文件示例，不支持ie8
@@ -54,6 +55,14 @@ layui.use(['jquery_common_setting', 'form', 'upload'], function () {
                 $('#resource').attr('href', result); //图片链接（base64）
             });
             layer.load(); //上传loading
+        },
+        progress: function (e, percent) {
+            console.log("进度：" + percent + '%');
+            //这里100%只是上传到服务器，服务器还需上传到文件服务器
+            if (percent > 50) {
+                percent = 50;
+            }
+            element.progress('progressBar', percent + '%');
         }
         , done: function (res) {
             //如果上传失败
@@ -61,6 +70,8 @@ layui.use(['jquery_common_setting', 'form', 'upload'], function () {
                 return layer.msg('上传失败');
             }
             layer.msg('上传成功');
+            //进度条设置为100%
+            element.progress('progressBar', 100 + '%');
             //上传成功
             $("#resource").show();
             $("#resource").attr("src", res.data);
@@ -128,6 +139,15 @@ function alertLayer(res) {
             btn.find('.layui-layer-btn0').attr({
                 href: '/index'
                 , target: '_self'
+            });
+        },
+        btn2: function (layero) {
+            //重置表单
+            $("#uploadResourceForm")[0].reset();
+            //重置进度条
+            layui.use(['element'], function () {
+                var element = layui.element;
+                element.progress('progressBar', 0 + '%');
             });
         }
     });

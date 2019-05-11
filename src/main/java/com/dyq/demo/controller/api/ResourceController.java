@@ -160,6 +160,8 @@ public class ResourceController {
             updateResource.setUpdatedAt(new Date());
             resource = updateResource;
         }
+        resource.setTotalRate(0L);
+        resource.setTotalRateNum(0);
         resource.setUserId(principal.getId());
         int code = 1;
         boolean saveSuccess = false;

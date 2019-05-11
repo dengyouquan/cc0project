@@ -44,7 +44,7 @@
     </div>
     <div class="content">
         <!--th:action="@{/api/image/save}"改成ajax上传-->
-        <form class="layui-form layui-form-pane" method="post">
+        <form class="layui-form layui-form-pane" id="uploadResourceForm" method="post">
             <div class="layui-form-item">
                 <label class="layui-form-label">文档标题</label>
                 <div class="layui-input-inline">
@@ -81,6 +81,9 @@
                     <input id="filesize" name="fileSize" hidden/>
                     <p id="demoText"></p>
                 </div>
+                <div class="layui-progress layui-progress-big" lay-showPercent="yes" lay-filter="progressBar">
+                    <div class="layui-progress-bar layui-bg-red" lay-percent="0%"></div>
+                </div>
                 <a class="layui-upload-file" id="resource">文档上传成功</a>
             </div>
             <!--拖拽上传-->
@@ -89,7 +92,7 @@
                 <p>点击上传，或将文件拖拽到此处</p>
                 <input id="filepath" name="filepath" hidden/>
             </div>-->
-            <div class="layui-form-item">
+            <div class="layui-form-item" style="margin-top: 3%">
                 <div class="layui-input-block">
                     <button class="layui-btn" lay-submit="" lay-filter="submitdocument" id="uploadResource">立即提交</button>
                     <button type="reset" class="layui-btn layui-btn-primary">重置</button>
