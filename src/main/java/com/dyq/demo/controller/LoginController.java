@@ -4,6 +4,7 @@ import com.dyq.demo.model.Authority;
 import com.dyq.demo.model.User;
 import com.dyq.demo.service.AuthorityService;
 import com.dyq.demo.service.UserService;
+import com.dyq.demo.util.SmsSender;
 import com.dyq.demo.vo.Response;
 import com.google.code.kaptcha.impl.DefaultKaptcha;
 import org.slf4j.Logger;
@@ -42,6 +43,7 @@ import java.util.Random;
 public class LoginController {
     private static final Logger LOGGER = LoggerFactory.getLogger(LoginController.class);
     private static final String DEFAULT_MESSAGE_VERIFY_CODE = "000000";
+    private static SmsSender smsSender = new SmsSender();
     @Autowired
     DefaultKaptcha defaultKaptcha;
     @Autowired
@@ -51,7 +53,8 @@ public class LoginController {
     @Autowired
     @Qualifier("authenticationManagerBean")
     AuthenticationManager authenticationManager;
-    private static final long VALID_MESSAGE_TIME = 1 * 60 * 1000;//五分钟有效期
+    private static final long VALID_MESSAGE_TIME = 5 * 60 * 1000;//五分钟有效期
+    private static final long VALID_MESSAGE_TIME_MINUTE = 5;//五分钟有效期
 
     @GetMapping("/usermessage")
     public String userspace(Model model) {
@@ -140,6 +143,12 @@ public class LoginController {
         //得到请求参数
         String phone = request.getParameter("phone");
         String password = request.getParameter("password");
+        //得到验证参数
+        Boolean phoneCodeOk = (Boolean) request.getSession().getAttribute(phone + "result");
+        if (phoneCodeOk == null || !phoneCodeOk) {
+            //可能其他脚本调用接口，修改密码
+            return ResponseEntity.ok().body(new Response(0, "修改密码失败", 0, false));
+        }
         System.out.println("login/modifyPwd==phone:" + phone + ",password:" + password);
         User user = userService.findByTel(phone);
         if (user != null && user.getId() != null) {
@@ -246,6 +255,10 @@ public class LoginController {
         //String phoneCode = "111111";
         //得到请求参数
         String phone = httpServletRequest.getParameter("phone");
+        //发送验证码
+        //smsSender.send(phone, phoneCode, VALID_MESSAGE_TIME_MINUTE);
+        //设置验证参数
+        httpServletRequest.getSession().setAttribute(phone + "result", false);
         httpServletRequest.getSession().setAttribute(phone, phoneCode);
         httpServletRequest.getSession().setAttribute(phone + "date", new Date().getTime() + VALID_MESSAGE_TIME);
         System.out.println("phone:" + phone + ",phoneCode:" + httpServletRequest.getSession().getAttribute(phone) + "有效时间：" + httpServletRequest.getSession().getAttribute(phone + "date"));
@@ -275,6 +288,8 @@ public class LoginController {
         if (pcode.equals(phoneCode) && new Date().getTime() < phoneCodeTime) {
             //设置为默认值，不让多次使用验证码
             httpServletRequest.getSession().setAttribute(phone, DEFAULT_MESSAGE_VERIFY_CODE);
+            //设置验证参数
+            httpServletRequest.getSession().setAttribute(phone + "result", true);
             return ResponseEntity.ok().body(new Response(0, "ok", 0, true));
         } else {
             return ResponseEntity.ok().body(new Response(0, "ok", 0, false));
