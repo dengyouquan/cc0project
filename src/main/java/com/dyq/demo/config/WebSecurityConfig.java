@@ -73,7 +73,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                         "/services/**", "/api/**", "/search/**"
                         //static
                         , "/css/**", "/js/**", "/layui/**", "/layer/**", "/semantic/**", "/images/**",
-                        "/favicon.ico", "/font/**", "/login/**", "/video/**", "/videojs/**").permitAll()
+                        "/favicon.ico", "/font/**", "/login/**", "/video/**", "/videojs/**", "/emoji/**").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .formLogin()
