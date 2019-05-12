@@ -41,11 +41,11 @@
         , {field: 'id', title: 'ID', sort: true, hide: true,}
         , {field: 'name', title: '用户名', sort: true,}
         , {field: 'username', title: '用户账号', sort: true,}
-        , {field: 'tel', title: '手机号',}
-        , {field: 'email', title: '邮箱',}
-        , {field: 'sex', title: '性别', templet: '#sexTpl'}
-        , {field: 'introduction', title: '简介',}
-        , {fixed: 'right', width: 400, align: 'center', toolbar: '#barDemo'}
+        , {field: 'tel', title: '手机号', sort: true,}
+        , {field: 'email', title: '邮箱', sort: true,}
+        , {field: 'sex', title: '性别', sort: true, templet: '#sexTpl'}
+        , {field: 'introduction', title: '简介', sort: true,}
+        , {fixed: 'right', width: 150, align: 'center', toolbar: '#barDemo'}
     ];
     layui.use(['laydate', 'laypage', 'layer', 'table', 'element', 'form'], function () {
         layer = layui.layer //弹层

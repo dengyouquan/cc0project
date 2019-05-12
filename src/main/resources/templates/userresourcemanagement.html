@@ -19,29 +19,66 @@
     <!--content-->
     <!--footer-->
     <div th:replace="~{/fragments/footer::footer}"></div>
+
+    <form class="layui-form" id="updateResourceInfo" action=""
+          style="margin-top: 10%;margin-left: 10%;margin-right: 10%;margin-bottom: 10%;width: 80%;display: none">
+        <div class="layui-form-item">
+            <label class="layui-form-label">资源名称:</label>
+            <div class="layui-input-block">
+                <input type="text" name="fileName" placeholder="请输入资源名称（30字内）" autocomplete="off" class="layui-input"
+                       lay-verify="required|fileName">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">资源描述:</label>
+            <div class="layui-input-block">
+                <input type="text" name="description" placeholder="请输入资源描述（250字内）" autocomplete="off" class="layui-input"
+                       lay-verify="required|description">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <button class="layui-btn" lay-submit lay-filter="updateSubmit">提交</button>
+            </div>
+        </div>
+    </form>
 </div>
 <table class="layui-hide" id="demo" lay-filter="test"></table>
 </body>
 
 <script type="text/html" id="barDemo">
-    <!--<a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="edit">编辑</a>-->
+    <!--<a class="layui-btn layui-btn-xs" lay-event="detail">查看</a>-->
+   <!-- 更新涉及到elasticsearch的内容，暂时不提供更新-->
+    <!--<a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>-->
     <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+</script>
+<script type="text/html" id="fileNameTpl">
+    <a href="{{d.filePath}}" class="layui-table-link" target="_blank">{{ d.fileName }}</a>
+</script>
+<script type="text/html" id="statusTpl">
+    {{#  if(d.status == 0){ }}
+    未审核
+    {{#  } else if(d.status == 1) { }}
+    审核通过
+    {{#  } else { }}
+    审核拒绝
+    {{#  } }}
 </script>
 <script>
     var layer, table, element, laydate, form;
     var t = [
         /*{type: 'checkbox', fixed: 'left'}*/
         , {field: 'id', title: 'ID', sort: true, hide: true,}
-        , {field: 'fileName', title: '名称', sort: true,}
+        , {field: 'fileName', title: '名称', sort: true, templet: '#fileNameTpl',}
         , {field: 'type', title: '类型', sort: true,}
         , {field: 'description', title: '描述', sort: true,}
         , {field: 'filePath', title: '路径', sort: true, hide: true}
-        , {field: 'fileSize', title: '大小', sort: true,}
+        , {field: 'fileSize', title: '大小（KB）', sort: true,}
         , {field: 'userId', title: '上传用户id', sort: true,}
-        , {field: 'status', title: '状态', sort: true,}
+        , {field: 'status', title: '状态', sort: true, templet: '#statusTpl',}
         , {field: 'averageRate', title: '评分', sort: true, hide: true}
         , {field: 'edit', title: '可编辑', hide: true}
-        , {fixed: 'right', width: 400, align: 'center', toolbar: '#barDemo'}
+        , {fixed: 'right', width: 150, align: 'center', toolbar: '#barDemo'}
     ];
     layui.use(['laydate', 'laypage', 'layer', 'table', 'element', 'form'], function () {
         layer = layui.layer //弹层
@@ -59,6 +96,71 @@
             let csrfToken = $("meta[name='_csrf']").attr("content");
             let csrfHeader = $("meta[name='_csrf_header']").attr("content");
             if (layEvent === 'edit') {
+                layui.use(["form"], function () {
+                    var form = layui.form
+                    var index = layer.open({
+                        type: 1,
+                        title: '更新资源信息',
+                        //定义宽度
+                        area: '50%',
+                        offset: 'auto',
+                        content: $('#updateResourceInfo'),
+                        success: function (layero, index) {
+                            $("#updateResourceInfo").css("display", "block");
+                            //不渲染无法使用，单选框点击不动
+                            form.render();
+                            //console.log(self.user);
+                            //自定义验证规则
+                            form.verify({
+                                description: function (value) {
+                                    if (value.length > 250) {
+                                        return "描述长度在250字节内"
+                                    }
+                                },
+                                fileName: function (value) {
+                                    if (value.length > 30) {
+                                        return "资源名在30字节内"
+                                    }
+                                },
+                            });
+                            form.on('submit(updateSubmit)', function (e) {
+                                var updateData = data
+                                data.fileName = $("input[name='fileName']").val();
+                                data.description = $("textarea[name='description']").val();
+                                //console.log(data);
+                                $.ajax({
+                                    url: '/api/resource/' + self.user.id,
+                                    type: 'put',
+                                    data: JSON.stringify(data),
+                                    beforeSend: function (request) {
+                                        request.setRequestHeader(csrfHeader, csrfToken); // 添加CSRF Token
+                                    },
+                                    contentType: 'application/json',
+                                    success: function (res) {
+                                        layui.use('layer', function () {
+                                            var layer = layui.layer;
+                                            layer.msg('更新用户信息成功', {offset: 'lb'});
+                                        });
+                                        //todo 可以只更新vue数据，现在为了节省时间，重载页面
+                                        location.reload();
+                                        layer.close(index);
+                                    },
+                                    fail: function (res) {
+                                        layui.use('layer', function () {
+                                            var layer = layui.layer;
+                                            layer.msg('更新用户信息失败', {offset: 'lb'});
+                                        });
+                                    }
+                                })
+                            });
+
+                        }, cancel: function () {
+                            //右上角关闭回调
+                            $("#updateUserInfo").css("display", "none");
+                            //return false 开启该代码可禁止点击该按钮关闭
+                        }
+                    });
+                });
             } else if (layEvent === 'del') {
                 layer.confirm('真的删除这个资源吗？', function (index) {
                     $.ajax({
