@@ -137,6 +137,14 @@ public class ResourceController {
         return ResponseEntity.ok().body(new Response(0, "删除成功", 0, null));
     }
 
+    @PutMapping(value = "/{id}")
+    public ResponseEntity update(@PathVariable Long id, @RequestBody Resource resource) {
+        resource.setUpdatedAt(new Date());
+        resource.setId(id);
+        resourceService.update(resource, false);
+        return ResponseEntity.ok().build();
+    }
+
     @PostMapping
     //public ResponseEntity<Response> save(resource resource,BindingResult br) {
     //BindingResult 时间变成当前时间

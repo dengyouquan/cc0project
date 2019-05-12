@@ -23,17 +23,18 @@
     <form class="layui-form" id="updateResourceInfo" action=""
           style="margin-top: 10%;margin-left: 10%;margin-right: 10%;margin-bottom: 10%;width: 80%;display: none">
         <div class="layui-form-item">
-            <label class="layui-form-label">资源名称:</label>
+            <label class="layui-form-label">名称:</label>
             <div class="layui-input-block">
                 <input type="text" name="fileName" placeholder="请输入资源名称（30字内）" autocomplete="off" class="layui-input"
                        lay-verify="required|fileName">
             </div>
         </div>
         <div class="layui-form-item">
-            <label class="layui-form-label">资源描述:</label>
+            <label class="layui-form-label">描述:</label>
             <div class="layui-input-block">
-                <input type="text" name="description" placeholder="请输入资源描述（250字内）" autocomplete="off" class="layui-input"
-                       lay-verify="required|description">
+                <textarea type="text" name="description" placeholder="请输入资源描述（250字内）" autocomplete="off"
+                          class="layui-textarea"
+                          lay-verify="required|description"></textarea>
             </div>
         </div>
         <div class="layui-form-item">
@@ -48,8 +49,8 @@
 
 <script type="text/html" id="barDemo">
     <!--<a class="layui-btn layui-btn-xs" lay-event="detail">查看</a>-->
-   <!-- 更新涉及到elasticsearch的内容，暂时不提供更新-->
-    <!--<a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>-->
+    <!-- 更新涉及到elasticsearch的内容，暂时不提供更新-->
+    <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
     <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
 </script>
 <script type="text/html" id="fileNameTpl">
@@ -108,6 +109,8 @@
                         success: function (layero, index) {
                             $("#updateResourceInfo").css("display", "block");
                             //不渲染无法使用，单选框点击不动
+                            $("input[name='fileName']").val(data.fileName);
+                            $("textarea[name='description']").val(data.description);
                             form.render();
                             //console.log(self.user);
                             //自定义验证规则
@@ -125,11 +128,11 @@
                             });
                             form.on('submit(updateSubmit)', function (e) {
                                 var updateData = data
-                                data.fileName = $("input[name='fileName']").val();
-                                data.description = $("textarea[name='description']").val();
-                                //console.log(data);
+                                updateData.fileName = $("input[name='fileName']").val();
+                                updateData.description = $("textarea[name='description']").val();
+                                //console.log(updateData);
                                 $.ajax({
-                                    url: '/api/resource/' + self.user.id,
+                                    url: '/api/resource/' + data.id,
                                     type: 'put',
                                     data: JSON.stringify(data),
                                     beforeSend: function (request) {
@@ -139,24 +142,25 @@
                                     success: function (res) {
                                         layui.use('layer', function () {
                                             var layer = layui.layer;
-                                            layer.msg('更新用户信息成功', {offset: 'lb'});
+                                            layer.msg('更新资源成功', {offset: 'lb'});
                                         });
+                                        layer.close(index);
                                         //todo 可以只更新vue数据，现在为了节省时间，重载页面
                                         location.reload();
-                                        layer.close(index);
                                     },
                                     fail: function (res) {
                                         layui.use('layer', function () {
                                             var layer = layui.layer;
-                                            layer.msg('更新用户信息失败', {offset: 'lb'});
+                                            layer.msg('更新资源失败', {offset: 'lb'});
                                         });
                                     }
                                 })
+                                return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
                             });
 
                         }, cancel: function () {
                             //右上角关闭回调
-                            $("#updateUserInfo").css("display", "none");
+                            $("#updateResourceInfo").css("display", "none");
                             //return false 开启该代码可禁止点击该按钮关闭
                         }
                     });
@@ -194,7 +198,6 @@
             data: {
                 message: 'Hello Vue!',
                 resources: [],
-
             },
             watch: {},
             created: function () {
