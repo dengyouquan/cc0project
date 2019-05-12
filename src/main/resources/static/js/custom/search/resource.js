@@ -23,7 +23,7 @@ layui.use('flow', function () {
                             '                        <div class="image">\n' +
                             '                            <span style="margin-left: 3%">' + item.type + '</span>\n' +
                             //搜索功能没有更新elasticsearch中审核字段，不让显示
-                           /* '                            <p style="float: right;margin-right: 3%">' + examine + '</p>' +*/
+                            '                            <p style="float: right;;margin-right: 3%">' + examine + '</p>' +
                             '<img src="' + item.filePath + '">' +
                             '                        </div>\n' +
                             '                        <div class="content">\n' +
@@ -36,7 +36,7 @@ layui.use('flow', function () {
                             '                    <div class="ui fluid card">\n' +
                             '                        <div class="image">\n' +
                             '                            <span style="margin-left: 3%">' + item.type + '</span>\n' +
-                           /* '                            <p style="float: right;margin-right: 3%">' + examine + '</p>' +*/
+                            '                            <p style="float: right;;margin-right: 3%">' + examine + '</p>' +
                             ' <img  src="/images/resource/' + item.type + '.jpg">' +
                             '                        </div>\n' +
                             '                        <div class="content">\n' +

@@ -7,6 +7,8 @@ import java.util.List;
 public interface ResourceService extends BaseModelService<Resource> {
     int getCount();
 
+    void update(Resource resource, boolean deletedEsResource);
+
     int getCountByStatus(int status);
 
     int getCountByUserId(long userId);

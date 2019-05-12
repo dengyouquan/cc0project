@@ -43,7 +43,7 @@ CREATE TABLE `image` (
   `created_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `updated_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '更新时间',
   `is_enabled` tinyint(3) unsigned DEFAULT NULL COMMENT '是否可用',
-  `e_id` tinyint(3) unsigned DEFAULT NULL COMMENT 'elasticsearch ID',
+  `e_id` varchar(255) unsigned DEFAULT NULL COMMENT 'elasticsearch ID',
   `file_name` varchar(32) NOT NULL DEFAULT '' COMMENT '文件名',
   `description` varchar(255) NOT NULL DEFAULT '' COMMENT '图片描述',
   `file_path` varchar(128) NOT NULL DEFAULT '' COMMENT '文件路径',

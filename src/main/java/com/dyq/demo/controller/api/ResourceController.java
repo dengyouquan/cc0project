@@ -4,6 +4,7 @@ import com.dyq.demo.model.ES.ESResource;
 import com.dyq.demo.model.Resource;
 import com.dyq.demo.model.ResourceStatus;
 import com.dyq.demo.model.User;
+import com.dyq.demo.service.ES.ESResourceService;
 import com.dyq.demo.service.ResourceService;
 import com.dyq.demo.service.UserService;
 import com.dyq.demo.util.FastDFSClientWrapper;
@@ -28,6 +29,8 @@ public class ResourceController {
     @Autowired
     private ResourceService resourceService;
     @Autowired
+    private ESResourceService esResourceService;
+    @Autowired
     private UserService userService;
 
     @Autowired
@@ -41,7 +44,7 @@ public class ResourceController {
         if (resource != null) {
             resource.setStatus(1);
             resource.setIsEnabled(true);
-            resourceService.save(resource);
+            resourceService.update(resource, false);
         }
         return ResponseEntity.ok().build();
     }
@@ -54,7 +57,7 @@ public class ResourceController {
         if (resource != null) {
             resource.setStatus(-1);
             resource.setIsEnabled(false);
-            resourceService.save(resource);
+            resourceService.update(resource, true);
         }
         return ResponseEntity.ok().build();
     }
@@ -117,7 +120,7 @@ public class ResourceController {
         Resource resource = resourceService.findById(id);
         if (resource != null) {
             resource.setIsEnabled(false);
-            resourceService.save(resource);
+            resourceService.update(resource, true);
         }
         return ResponseEntity.ok().body(new Response());
     }

@@ -18,7 +18,7 @@ public class Resource extends BaseModel {
      * elasticsearch ID
      */
     @Column(name = "e_id")
-    private Long eId;
+    private String eId;
     @Column(name = "file_name")
     private String fileName;
     private String description;

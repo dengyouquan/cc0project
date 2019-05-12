@@ -80,6 +80,11 @@ public class EsResourceServiceImpl implements ESResourceService {
     }
 
     @Override
+    public void deleteByEsdocumentId(Long esdocumentId) {
+        esResourceRepository.deleteByEsdocumentId(esdocumentId);
+    }
+
+    @Override
     public long count() {
         return esResourceRepository.count();
     }

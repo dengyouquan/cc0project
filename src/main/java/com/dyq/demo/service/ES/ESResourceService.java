@@ -8,11 +8,20 @@ import java.util.List;
 
 public interface ESResourceService {
     ESResource findById(String id);
+
     void save(ESResource esResource);
+
     void remove(String id);
+
     List<ESResource> findAll(Integer pageNum, Integer pageSize);
+
     Page<ESResource> findAll(String type, String keyword, Pageable pageable);
+
     Page<ESResource> findAll(String type, String keyword, Integer pageNum, Integer pageSize);
+
     ESResource findByEsdocumentId(Long esdocumentId);
+
+    void deleteByEsdocumentId(Long esdocumentId);
+
     long count();
 }

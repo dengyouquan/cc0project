@@ -63,22 +63,34 @@ public class ResourceServiceImpl implements ResourceService {
     public void save(Resource resource) {
         ESResource esResource = null;
         if (resource.getId() != null) {
-            resourceRepository.updateByPrimaryKey(resource);
-            //elasticSearch 有问题
-            //esResource = esResourceRepository.findByEsdocumentId(resource.getId());
-            //esResource.update(resource);
+            update(resource, false);
         } else {
-            resourceRepository.insert(resource);
             //保存elasticsearch
             esResource = new ESResource(resource);
             //elasticsearch保存
             esResourceRepository.save(esResource);
+            resource.setEId(esResource.getId());
+            resourceRepository.insert(resource);
         }
+    }
 
+    @Override
+    public void update(Resource resource, boolean deletedEsResource) {
+        esResourceRepository.deleteById(resource.getEId());
+        ESResource esResource = new ESResource(resource);
+        if (!deletedEsResource) {
+            esResourceRepository.save(esResource);
+        }
+        resource.setEId(esResource.getId());
+        resourceRepository.updateByPrimaryKey(resource);
     }
 
     @Override
     public void remove(Long id) {
+        Resource query = Resource.getNullResource();
+        query.setId(id);
+        Resource resource = resourceRepository.selectOne(query);
+        esResourceRepository.deleteById(resource.getEId());
         resourceRepository.deleteByPrimaryKey(id);
     }
 
