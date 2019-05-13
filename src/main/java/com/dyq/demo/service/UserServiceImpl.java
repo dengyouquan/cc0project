@@ -33,6 +33,7 @@ public class UserServiceImpl extends BaseModelServiceImpl<User> implements UserS
     @Override
     public User findByTel(String tel) {
         User user = userRepository.findByTel(tel);
+        if (user == null) return null;
         List<Authority> authorities = findAuthoritysById(user.getId());
         user.setAuthorities(authorities);
         return user;
@@ -41,6 +42,7 @@ public class UserServiceImpl extends BaseModelServiceImpl<User> implements UserS
     @Override
     public User findByEmail(String email) {
         User user = userRepository.findByEmail(email);
+        if (user == null) return null;
         List<Authority> authorities = findAuthoritysById(user.getId());
         user.setAuthorities(authorities);
         return user;
@@ -49,6 +51,7 @@ public class UserServiceImpl extends BaseModelServiceImpl<User> implements UserS
     @Override
     public User findByUsername(String username) {
         User user = userRepository.findByUsername(username);
+        if (user == null) return null;
         List<Authority> authorities = findAuthoritysById(user.getId());
         user.setAuthorities(authorities);
         return user;
