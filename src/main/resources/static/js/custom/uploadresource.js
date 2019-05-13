@@ -35,11 +35,21 @@ layui.use(['jquery_common_setting', 'form', 'upload', 'element'], function () {
 
     //自定义验证规则
     form.verify({
-        title: function (value) {
-            if (value.length < 2) {
-                return '标题至少得2个字符啊';
+        fileName: function (value) {
+            if (value.length > 30) {
+                return '资源名称应在30字内';
             }
-        }
+        },
+        description: function (value) {
+            if (value.length > 250) {
+                return '资源描述应在250字内';
+            }
+        },
+        requiredFilePath: function (value) {
+            if (value.length === 0) {
+                return '提交前请先上传文件';
+            }
+        },
     });
 
     //普通图片上传
@@ -90,6 +100,24 @@ layui.use(['jquery_common_setting', 'form', 'upload', 'element'], function () {
         }
     });
 
+
+    form.on('submit(uploadResource)', function (e) {
+        let fileName = $("input[name='fileName']").val();
+        let type = $("select[name='type']").val();
+        let description = $("textarea[name='description']").val();
+        let fileSize = $("input[name='fileSize']").val();
+        let filePath = $("input[name='filePath']").val();
+        data = {
+            "fileName": fileName,
+            "type": type,
+            "description": description,
+            "fileSize": fileSize,
+            "filePath": filePath
+        };
+        //console.log(data);
+        uploadResource(data);
+        return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
+    });
     //拖拽上传
     /* upload.render({
          elem: '#uploadfile'
@@ -184,7 +212,8 @@ function uploadResource(data) {
 };
 
 $(function () {
-    $("#uploadResource").click(function () {
+    //不会触发表单校验
+    /*$("#uploadResource").click(function () {
         let fileName = $("input[name='fileName']").val();
         let type = $("select[name='type']").val();
         let description = $("textarea[name='description']").val();
@@ -201,5 +230,5 @@ $(function () {
         uploadResource(data);
         //禁止默认跳转？？？
         return false;
-    });
+    });*/
 });

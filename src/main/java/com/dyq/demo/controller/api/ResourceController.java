@@ -149,6 +149,7 @@ public class ResourceController {
     //public ResponseEntity<Response> save(resource resource,BindingResult br) {
     //BindingResult 时间变成当前时间
     public ResponseEntity<Response> save(Resource resource) {
+        //if (resource != null) return ResponseEntity.ok().body(new Response(0, "", 0, null));
         User principal = userService.getUserByPrincipal();
         String msg = resource.getId() == null ? "新增成功!" : "更新成功!";
         Resource updateResource = null;
