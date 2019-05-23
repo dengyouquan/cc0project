@@ -88,10 +88,28 @@ public class ResourceController {
             resourceList = resourceService.findAll(pageIndex, pageSize, orderBy);
             resourceNum = resourceService.getCount();
         }
+        calcResourceListAverageRate(resourceList);
         //status 0 未审核 -1 未通过审核 1 通过审核
         // todo 可以通过pageHelper的PageInfo得到总数量
         System.out.println("resourceNum:" + resourceNum);
         return ResponseEntity.ok().body(new Response(0, "资源列表", resourceNum, resourceList));
+    }
+
+    private void calcResourceListAverageRate(List<Resource> resourceList) {
+        if (resourceList == null) return;
+        for (Resource resource : resourceList) {
+            //计算平均分数
+            calcResourceAverageRate(resource);
+        }
+    }
+
+    private void calcResourceAverageRate(Resource resource) {
+        if (resource.getTotalRateNum() == null || resource.getTotalRateNum() == 0) {
+            resource.setAverageRate(0);
+        } else {
+            double score = resource.getTotalRate() * 1.0 / resource.getTotalRateNum();
+            resource.setAverageRate((int) Math.round(score));
+        }
     }
 
     @RequestMapping(value = "/add")
@@ -103,12 +121,7 @@ public class ResourceController {
     public String view(@PathVariable Long id, Model model) {
         Resource resource = resourceService.findById(id);
         //计算平均分数
-        if (resource.getTotalRateNum() == null || resource.getTotalRateNum() == 0) {
-            resource.setAverageRate(0);
-        } else {
-            double score = resource.getTotalRate() * 1.0 / resource.getTotalRateNum();
-            resource.setAverageRate((int) Math.round(score));
-        }
+        calcResourceAverageRate(resource);
         ESResource esResource = new ESResource(resource);
         model.addAttribute("resource", resource);
         model.addAttribute("esResource", esResource);

@@ -30,6 +30,7 @@ layui.use(['flow', 'element'], function () {
                                     '                    <div class="ui fluid card">\n' +
                                     '                        <div class="image">\n' +
                                     '                            <span style="margin-left: 3%">' + item.type + '</span>\n' +
+                                    '                            <span style="margin-left: 30%">' + item.averageRate + '/5分</span>\n' +
                                     '                            <p style="float: right;margin-right: 3%">' + examine + '</p>' +
                                     '<img src="' + item.filePath + '">' +
                                     '                        </div>\n' +
@@ -43,6 +44,7 @@ layui.use(['flow', 'element'], function () {
                                     '                    <div class="ui fluid card">\n' +
                                     '                        <div class="image">\n' +
                                     '                            <span style="margin-left: 3%">' + item.type + '</span>\n' +
+                                    '                            <span style="margin-left: 30%">' + item.averageRate + '/5分</span>\n' +
                                     '                            <p style="float: right;margin-right: 3%">' + examine + '</p>' +
                                     ' <img  src="/images/resource/' + item.type + '.jpg">' +
                                     '                        </div>\n' +
@@ -80,6 +82,7 @@ layui.use(['flow', 'element'], function () {
                                     '                    <div class="ui fluid card">\n' +
                                     '                        <div class="image">\n' +
                                     '                            <span style="margin-left: 3%">' + item.type + '</span>\n' +
+                                    '                            <span style="margin-left: 30%">' + item.averageRate + '/5分</span>\n' +
                                     '                            <p style="float: right;margin-right: 3%">' + examine + '</p>' +
                                     '<img src="' + item.filePath + '">' +
                                     '                        </div>\n' +
@@ -93,6 +96,7 @@ layui.use(['flow', 'element'], function () {
                                     '                    <div class="ui fluid card">\n' +
                                     '                        <div class="image">\n' +
                                     '                            <span style="margin-left: 3%">' + item.type + '</span>\n' +
+                                    '                            <span style="margin-left: 30%">' + item.averageRate + '/5分</span>\n' +
                                     '                            <p style="float: right;margin-right: 3%">' + examine + '</p>' +
                                     ' <img  src="/images/resource/' + item.type + '.jpg">' +
                                     '                        </div>\n' +
@@ -131,6 +135,7 @@ layui.use(['flow', 'element'], function () {
                             '                    <div class="ui fluid card">\n' +
                             '                        <div class="image">\n' +
                             '                            <span style="margin-left: 3%">' + item.type + '</span>\n' +
+                            '                            <span style="margin-left: 30%">' + item.averageRate + '/5分</span>\n' +
                             '                            <p style="float: right;margin-right: 3%">' + examine + '</p>' +
                             '<img src="' + item.filePath + '">' +
                             '                        </div>\n' +
@@ -144,6 +149,8 @@ layui.use(['flow', 'element'], function () {
                             '                    <div class="ui fluid card">\n' +
                             '                        <div class="image">\n' +
                             '                            <span style="margin-left: 3%">' + item.type + '</span>\n' +
+
+                            '                            <span style="margin-left: 30%">' + item.averageRate + '/5分</span>\n' +
                             '                            <p style="float: right;margin-right: 3%">' + examine + '</p>' +
                             ' <img  src="/images/resource/' + item.type + '.jpg">' +
                             '                        </div>\n' +
