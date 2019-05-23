@@ -1,5 +1,6 @@
 package com.dyq.demo.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -26,9 +27,11 @@ public abstract class BaseModel implements Comparable<BaseModel>, Serializable {
 
     @Column(nullable = false)
     @DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date createdAt;
 
     @DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @Column(nullable = false)
     private Date updatedAt;
 

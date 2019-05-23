@@ -44,6 +44,7 @@
                             <a class="header" th:text="${resource.fileName}">丹尼尔 路易斯</a>
                             <br/>
                             <div>
+                                <span th:text="'上传时间：'+${uploadTime}"></span>
                                 <span style="visibility: hidden;" id="resourceType" th:text="${resource.type}"></span>
                                 <span style="float: right;margin-right: 3%"
                                       th:text="${resource.status}==0?'未审核':'已审核'"></span>

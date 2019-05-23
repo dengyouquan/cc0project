@@ -20,6 +20,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -35,6 +36,8 @@ public class ResourceController {
 
     @Autowired
     private FastDFSClientWrapper dfsClient;
+
+    private static final SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
     @ResponseBody
     @PutMapping("/{id}/agree")
@@ -124,6 +127,7 @@ public class ResourceController {
         calcResourceAverageRate(resource);
         ESResource esResource = new ESResource(resource);
         model.addAttribute("resource", resource);
+        model.addAttribute("uploadTime", format.format(resource.getCreatedAt()));
         model.addAttribute("esResource", esResource);
         return "/resourceDetail";
     }
