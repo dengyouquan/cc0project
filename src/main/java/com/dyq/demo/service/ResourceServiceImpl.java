@@ -33,19 +33,28 @@ public class ResourceServiceImpl implements ResourceService {
     }
 
     @Override
-    public List<Resource> findAllByStatus(Integer pageNum, Integer pageSize, int status) {
-        return findAllByUserIdAndStatus(pageNum, pageSize, null, status);
+    public List<Resource> findAllByStatus(Integer pageNum, Integer pageSize, int status, String orderBy) {
+        return findAllByUserIdAndStatus(pageNum, pageSize, null, status, orderBy);
+    }
+
+    @Override
+    public List<Resource> findAll(Integer pageNum, Integer pageSize, String orderBy) {
+        return findAllByUserIdAndStatus(pageNum, pageSize, null, null, orderBy);
     }
 
     @Override
     public List<Resource> findAllByUserId(Integer pageNum, Integer pageSize, long userId) {
-        return findAllByUserIdAndStatus(pageNum, pageSize, userId, null);
+        return findAllByUserIdAndStatus(pageNum, pageSize, userId, null, null);
     }
 
     @Override
-    public List<Resource> findAllByUserIdAndStatus(Integer pageNum, Integer pageSize, Long userId, Integer status) {
+    public List<Resource> findAllByUserIdAndStatus(Integer pageNum, Integer pageSize, Long userId, Integer status, String orderBy) {
         if (pageNum != null && pageSize != null) {
-            PageHelper.startPage(pageNum, pageSize);
+            if (orderBy != null) {
+                PageHelper.startPage(pageNum, pageSize, orderBy);
+            } else {
+                PageHelper.startPage(pageNum, pageSize);
+            }
         }
         Resource resource = Resource.getNullResource();
         resource.setIsEnabled(true);
@@ -96,6 +105,6 @@ public class ResourceServiceImpl implements ResourceService {
 
     @Override
     public List<Resource> findAll(Integer pageNum, Integer pageSize) {
-        return findAllByUserIdAndStatus(pageNum, pageSize, null, null);
+        return findAllByUserIdAndStatus(pageNum, pageSize, null, null, null);
     }
 }

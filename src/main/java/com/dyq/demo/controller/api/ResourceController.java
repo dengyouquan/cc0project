@@ -78,14 +78,14 @@ public class ResourceController {
 
     @GetMapping("/list")
     public ResponseEntity<Response> getAll(@RequestParam(value = "page", required = false, defaultValue = "1") int pageIndex,
-                                           @RequestParam(value = "limit", required = false, defaultValue = "10") int pageSize, @RequestParam(value = "status", required = false, defaultValue = "-2") int status) {
+                                           @RequestParam(value = "limit", required = false, defaultValue = "10") int pageSize, @RequestParam(value = "status", required = false, defaultValue = "-2") int status, @RequestParam(value = "order_by", required = false, defaultValue = "created_at") String orderBy) {
         List<Resource> resourceList;
         int resourceNum;
         if (status != -2) {
-            resourceList = resourceService.findAllByStatus(pageIndex, pageSize, status);
+            resourceList = resourceService.findAllByStatus(pageIndex, pageSize, status, orderBy);
             resourceNum = resourceService.getCountByStatus(status);
         } else {
-            resourceList = resourceService.findAll(pageIndex, pageSize);
+            resourceList = resourceService.findAll(pageIndex, pageSize, orderBy);
             resourceNum = resourceService.getCount();
         }
         //status 0 未审核 -1 未通过审核 1 通过审核
