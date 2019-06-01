@@ -40,20 +40,20 @@
 <!--引入semantic，解决边框-->
 <div class="ui card center" style="margin-top: 10%;margin-left: 25%;margin-right: 25%;margin-bottom: 10%;width: 50%">
     <div class="content">
-        <div class="header">上传文档</div>
+        <div class="header">上传资源</div>
     </div>
     <div class="content">
         <!--th:action="@{/api/image/save}"改成ajax上传-->
-        <form class="layui-form layui-form-pane" method="post">
+        <form class="layui-form layui-form-pane" id="uploadResourceForm" method="post">
             <div class="layui-form-item">
-                <label class="layui-form-label">文档标题</label>
+                <label class="layui-form-label">资源标题</label>
                 <div class="layui-input-inline">
-                    <input type="text" name="fileName" lay-verify="required" placeholder="请输入文档标题" autocomplete="off"
+                    <input type="text" name="fileName" lay-verify="required|fileName" placeholder="请输入资源标题(30字内)" autocomplete="off"
                            class="layui-input">
                 </div>
             </div>
             <div class="layui-form-item">
-                <label class="layui-form-label">文档类型</label>
+                <label class="layui-form-label">资源类型</label>
                 <div class="layui-input-block">
                     <select name="type" lay-filter="aihao">
                         <option value=""></option>
@@ -67,23 +67,24 @@
                 </div>
             </div>
             <div class="layui-form-item layui-form-text">
-                <label class="layui-form-label">文档描述</label>
+                <label class="layui-form-label">资源描述</label>
                 <div class="layui-input-block">
-                    <textarea placeholder="请输入文档描述" name="description" class="layui-textarea"
-                              lay-verify="required"></textarea>
+                    <textarea placeholder="请输入资源描述(250字内）" name="description" class="layui-textarea"
+                              lay-verify="required|description"></textarea>
                 </div>
             </div>
             <!--普通上传-->
             <div class="layui-upload">
-                <button type="button" class="layui-btn" id="resourceUpload">上传文档</button>
+                <button type="button" class="layui-btn" id="resourceUpload">上传资源(500MB内)</button>
                 <div class="layui-upload-list">
-                    <input id="filepath" name="filePath" hidden/>
+                    <input id="filepath" name="filePath" lay-verify="requiredFilePath" hidden/>
                     <input id="filesize" name="fileSize" hidden/>
                     <p id="demoText"></p>
                 </div>
-                <div style="margin-left: 30%;margin-right: 30%">
-                    <a class="layui-upload-file" id="resource">文档上传成功</a>
+                <div class="layui-progress layui-progress-big" lay-showPercent="yes" lay-filter="progressBar">
+                    <div class="layui-progress-bar layui-bg-red" lay-percent="0%"></div>
                 </div>
+                <a class="layui-upload-file" id="resource">资源上传成功</a>
             </div>
             <!--拖拽上传-->
             <!--<div class="layui-upload-drag" id="uploadfile">
@@ -91,9 +92,9 @@
                 <p>点击上传，或将文件拖拽到此处</p>
                 <input id="filepath" name="filepath" hidden/>
             </div>-->
-            <div class="layui-form-item">
+            <div class="layui-form-item" style="margin-top: 3%">
                 <div class="layui-input-block">
-                    <button class="layui-btn" lay-submit="" lay-filter="submitdocument" id="uploadResource">立即提交</button>
+                    <button class="layui-btn" lay-submit="" lay-filter="uploadResource" id="uploadResource">立即提交</button>
                     <button type="reset" class="layui-btn layui-btn-primary">重置</button>
                 </div>
             </div>

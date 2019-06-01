@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dyq.demo.repository.AuthorityRepository" >
+  <resultMap id="BaseResultMap" type="com.dyq.demo.model.Authority" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, name
+  </sql>
+  <select id="selectByUserId" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select a.id,name
+    from authority a
+    join join_user_authority ua on ua.authority_id = a.id
+    where ua.user_id = #{userId}
+  </select>
+</mapper>

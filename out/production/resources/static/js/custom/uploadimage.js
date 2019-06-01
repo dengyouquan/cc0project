@@ -135,7 +135,7 @@ $(function () {
             "fileSize":fileSize,
             "filePath":filePath
         };
-        console.log(data);
+        //console.log(data);
         uploadImage(data);
         //禁止默认跳转？？？
         return false;

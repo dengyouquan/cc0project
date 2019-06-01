@@ -136,7 +136,7 @@
                         request.setRequestHeader(csrfHeader, csrfToken); // 添加  CSRF Token
                     },
                     success:function(response){
-
+						window.location.reload();
                     },
                     error:function() {
                     }

@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="CC0资源网站">
+    <meta name="author" content="dyq">
+    <!--CSRF-->
+    <meta name="_csrf" th:content="${_csrf.token}"/>
+    <!-- default header name is X-CSRF-TOKEN -->
+    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+    <!--favicon图标-->
+    <link rel="icon" href="/favicon.ico">
+    <!--semantic.css-->
+    <link rel="stylesheet" href="/semantic/semantic.min.css" th:href="@{/semantic/semantic.min.css}"/>
+    <title>CC0免费资源网</title>
+    <!--layui.css-->
+    <link rel="stylesheet" href="/layui/css/layui.css" th:href="@{/layui/css/layui.css}">
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css" rel="stylesheet">
+</head>
+<body>
+<!--header-->
+<div th:replace="~{fragments/header::header}"></div>
+<!--content-->
+<div style="margin-top: 10%;margin-bottom: 5%;margin-right: 0%!important;margin-left: 0%!important" id="app">
+    <div class="ui card center"
+         style="margin-top: 10%;margin-left: 10%;margin-right: 10%;margin-bottom: 10%;width: 80%;">
+        <div class="content">
+            <div class="layui-collapse" lay-accordion="">
+                <div class="layui-colla-item">
+                    <h2 class="layui-colla-title">本网站资源需要收费吗？</h2>
+                    <div class="layui-colla-content">
+                        <p>本网站已审核资源全部为CC0资源，不需收费，免费使用，无论你商用还是二次创作，都没有版权风险。</p>
+                    </div>
+                </div>
+                <div class="layui-colla-item">
+                    <h2 class="layui-colla-title">CC0是什么？</h2>
+                    <div class="layui-colla-content">
+                        <p>CC0 1.0 通用 (CC0 1.0) 公共领域贡献。无著作权，即在作品上适用该文本的人已经将作品 贡献
+                            至公共领域，在法律允许的范围，放弃所有他在全世界范围内基于著作权法对作品享有的权利，包括所有相关权利和邻接权利。您可以复制、修改、发行和表演本作品，甚至可用于商业性目的，都无需要求同意。<br/>
+                            具体参考<a href="https://creativecommons.org/publicdomain/zero/1.0/deed.zh">creativecommons</a>
+                        </p>
+                    </div>
+                </div>
+                <div class="layui-colla-item">
+                    <h2 class="layui-colla-title">需要登录才能下载吗？</h2>
+                    <div class="layui-colla-content">
+                        <p>不需要，登录只是可以上传资源，评论，评分，无需登录就可以下载和搜索资源。</p>
+                    </div>
+                </div>
+                <div class="layui-colla-item">
+                    <h2 class="layui-colla-title">还有其他问题？</h2>
+                    <div class="layui-colla-content">
+                        <p>请联系邮箱dengyouquan@foxmail.com</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--footer-->
+<div th:replace="~{/fragments/footer::footer}"></div>
+</body>
+</html>

@@ -43,7 +43,7 @@ CREATE TABLE `image` (
   `created_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `updated_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '更新时间',
   `is_enabled` tinyint(3) unsigned DEFAULT NULL COMMENT '是否可用',
-  `e_id` tinyint(3) unsigned DEFAULT NULL COMMENT 'elasticsearch ID',
+  `e_id` varchar(255) unsigned DEFAULT NULL COMMENT 'elasticsearch ID',
   `file_name` varchar(32) NOT NULL DEFAULT '' COMMENT '文件名',
   `description` varchar(255) NOT NULL DEFAULT '' COMMENT '图片描述',
   `file_path` varchar(128) NOT NULL DEFAULT '' COMMENT '文件路径',
@@ -150,7 +150,55 @@ CREATE TABLE `resource` (
   `tags` varchar(128) DEFAULT NULL COMMENT '标签',
   `user_id` bigint(20) DEFAULT NULL COMMENT '用户ID',
   `status` int(20) DEFAULT NULL COMMENT '审核状态',
+  `total_rate` bigint(20) DEFAULT 0 COMMENT '总评分',
+  `total_rate_num` int(20) DEFAULT 0 COMMENT '总评分人数',
   PRIMARY KEY (`id`)
 ) ENGINE=Innodb AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COMMENT='资源信息表';
 
+CREATE TABLE `image` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `created_at` datetime NOT NULL DEFAULT now() COMMENT '创建时间',
+  `updated_at` datetime NOT NULL DEFAULT now() COMMENT '更新时间',
+  -- 强制】表达是与否概念的字段，必须使用 is _ xxx 的方式命名，数据类型是 unsigned tinyint
+  -- （ 1 表示是，0 表示否 ） 。
+  `is_enabled`  tinyint unsigned DEFAULT NULL COMMENT '是否可用',
+  `e_id`  bigint(20) DEFAULT NULL COMMENT 'elasticsearch ID',
+  `file_name` varchar(32) NOT NULL DEFAULT '' COMMENT '文件名',
+  `description` varchar(255) NOT NULL DEFAULT '' COMMENT '图片描述',
+  `file_path` varchar(255) NOT NULL DEFAULT '' COMMENT '文件路径',
+  `file_format` varchar(16) NOT NULL DEFAULT '' COMMENT '文件格式',
+  `file_size` varchar(16) NOT NULL DEFAULT '' COMMENT '文件大小',
+  `type` varchar(8) DEFAULT NULL COMMENT '类型',
+  `tags` varchar(128) DEFAULT NULL COMMENT '标签',
+  `user_id` bigint(20) DEFAULT NULL COMMENT '用户ID',
+  `status` int(20) DEFAULT NULL COMMENT '审核状态',
+  PRIMARY KEY (`id`)
+) ENGINE=Innodb AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COMMENT='图片信息表';
+
+CREATE TABLE `comment` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `created_at` datetime NOT NULL DEFAULT now() COMMENT '创建时间',
+  `updated_at` datetime NOT NULL DEFAULT now() COMMENT '更新时间',
+  -- 强制】表达是与否概念的字段，必须使用 is _ xxx 的方式命名，数据类型是 unsigned tinyint
+  -- （ 1 表示是，0 表示否 ） 。
+  `from_name` varchar(32) NOT NULL DEFAULT '' COMMENT '用户名',
+  `from_avatar` varchar(255) NOT NULL DEFAULT '' COMMENT '用户头像',
+  `content` varchar(255) NOT NULL DEFAULT '' COMMENT '评论',
+  `user_id` bigint(20) DEFAULT NULL COMMENT '用户ID',
+  `resource_id` bigint(20) DEFAULT NULL COMMENT '资源ID',
+  `enabled` tinyint(3) DEFAULT 1 COMMENT '启用',
+  PRIMARY KEY (`id`)
+) ENGINE=Innodb AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COMMENT='评论信息表';
+
+CREATE TABLE `rate` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `created_at` datetime NOT NULL DEFAULT now() COMMENT '创建时间',
+  `updated_at` datetime NOT NULL DEFAULT now() COMMENT '更新时间',
+  -- 强制】表达是与否概念的字段，必须使用 is _ xxx 的方式命名，数据类型是 unsigned tinyint
+  -- （ 1 表示是，0 表示否 ） 。
+  `rate` tinyint NOT NULL DEFAULT 0 COMMENT '评分',
+  `user_id` bigint(20) DEFAULT NULL COMMENT '用户ID',
+  `resource_id` bigint(20) DEFAULT NULL COMMENT '资源ID',
+  PRIMARY KEY (`id`)
+) ENGINE=Innodb AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COMMENT='评论信息表';
 

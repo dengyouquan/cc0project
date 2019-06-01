@@ -4,22 +4,23 @@ layui.config({
     jquery_common_setting: '/js/custom/jquery_common_setting' // jquery_common_setting.js所在目录,token权限校验
 });
 
-layui.use(['jquery_common_setting', 'form', 'upload'], function () {
+layui.use(['jquery_common_setting', 'form', 'upload', 'element'], function () {
     var form = layui.form
         , layer = layui.layer
         , $ = layui.jquery
-        , upload = layui.upload;
-
+        , upload = layui.upload
+        , element = layui.element;
+    element.init();
     $.ajaxSetup({
         // 同步
-        async:true, // 默认true，异步
+        async: true, // 默认true，异步
         // 发送cookie
         xhrFields: {
             withCredentials: true
         },
         // 请求发送前
-        beforeSend:function(){
-            alert(send)
+        beforeSend: function () {
+            //alert(send)
             // 获取CSRF Token
             let csrfToken = $("meta[name='_csrf']").attr("content");
             let csrfHeader = $("meta[name='_csrf_header']").attr("content");
@@ -27,30 +28,51 @@ layui.use(['jquery_common_setting', 'form', 'upload'], function () {
             request.setRequestHeader(csrfHeader, csrfToken); // 添加CSRF Token
         },
         // 请求返回
-        complete:function(){
+        complete: function () {
             // 返回数据，根据数据调转页面等
         }
     });
 
     //自定义验证规则
     form.verify({
-        title: function (value) {
-            if (value.length < 2) {
-                return '标题至少得2个字符啊';
+        fileName: function (value) {
+            if (value.length > 30) {
+                return '资源名称应在30字内';
             }
-        }
+        },
+        description: function (value) {
+            if (value.length > 250) {
+                return '资源描述应在250字内';
+            }
+        },
+        requiredFilePath: function (value) {
+            if (value.length === 0) {
+                return '提交前请先上传文件';
+            }
+        },
     });
 
     //普通图片上传
     var uploadInst = upload.render({
         elem: '#resourceUpload'
         //,url: '/uploadfile'
+        , accept: 'file'
+        , exts: 'zip|rar|7z|jpg|png|gif|bmp|jpeg|mp3|wav|wmv|mp4|avi|rmvb'
         , url: '/services/resource'
         , before: function (obj) {
             //预读本地文件示例，不支持ie8
             obj.preview(function (index, file, result) {
                 $('#resource').attr('href', result); //图片链接（base64）
             });
+            layer.load(); //上传loading
+        },
+        progress: function (e, percent) {
+            console.log("进度：" + percent + '%');
+            //这里100%只是上传到服务器，服务器还需上传到文件服务器
+            if (percent > 50) {
+                percent = 50;
+            }
+            element.progress('progressBar', percent + '%');
         }
         , done: function (res) {
             //如果上传失败
@@ -58,11 +80,14 @@ layui.use(['jquery_common_setting', 'form', 'upload'], function () {
                 return layer.msg('上传失败');
             }
             layer.msg('上传成功');
+            //进度条设置为100%
+            element.progress('progressBar', 100 + '%');
             //上传成功
             $("#resource").show();
             $("#resource").attr("src", res.data);
             $("#filepath").attr("value", res.data);
             $("#filesize").attr("value", res.count);
+            layer.closeAll('loading');
         }
         , error: function () {
             //演示失败状态，并实现重传
@@ -71,9 +96,28 @@ layui.use(['jquery_common_setting', 'form', 'upload'], function () {
             demoText.find('.demo-reload').on('click', function () {
                 uploadInst.upload();
             });
+            layer.closeAll('loading');
         }
     });
 
+
+    form.on('submit(uploadResource)', function (e) {
+        let fileName = $("input[name='fileName']").val();
+        let type = $("select[name='type']").val();
+        let description = $("textarea[name='description']").val();
+        let fileSize = $("input[name='fileSize']").val();
+        let filePath = $("input[name='filePath']").val();
+        data = {
+            "fileName": fileName,
+            "type": type,
+            "description": description,
+            "fileSize": fileSize,
+            "filePath": filePath
+        };
+        //console.log(data);
+        uploadResource(data);
+        return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
+    });
     //拖拽上传
     /* upload.render({
          elem: '#uploadfile'
@@ -124,12 +168,21 @@ function alertLayer(res) {
                 href: '/index'
                 , target: '_self'
             });
+        },
+        btn2: function (layero) {
+            //重置表单
+            $("#uploadResourceForm")[0].reset();
+            //重置进度条
+            layui.use(['element'], function () {
+                var element = layui.element;
+                element.progress('progressBar', 0 + '%');
+            });
         }
     });
 }
 
 function uploadResource(data) {
-    alert("uploadResource")
+    //alert("uploadResource")
     // 获取CSRF Token
     var csrfToken = $("meta[name='_csrf']").attr("content");
     var csrfHeader = $("meta[name='_csrf_header']").attr("content");
@@ -159,7 +212,8 @@ function uploadResource(data) {
 };
 
 $(function () {
-    $("#uploadResource").click(function () {
+    //不会触发表单校验
+    /*$("#uploadResource").click(function () {
         let fileName = $("input[name='fileName']").val();
         let type = $("select[name='type']").val();
         let description = $("textarea[name='description']").val();
@@ -172,9 +226,9 @@ $(function () {
             "fileSize": fileSize,
             "filePath": filePath
         };
-        console.log(data);
+        //console.log(data);
         uploadResource(data);
         //禁止默认跳转？？？
         return false;
-    });
+    });*/
 });

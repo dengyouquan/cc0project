@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/head::head">
+    <meta charset="utf-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <title>评论管理</title>
+    <style>
+        body {
+            margin: 10px;
+            padding-top: 50px;
+        }
+    </style>
+</head>
+<body>
+<div id="app" style="margin-top: 10px">
+    <!--header-->
+    <div th:replace="~{fragments/header::header}"></div>
+    <!--content-->
+    <!--footer-->
+    <div th:replace="~{/fragments/footer::footer}"></div>
+</div>
+<table class="layui-hide" id="demo" lay-filter="test"></table>
+</body>
+
+<script type="text/html" id="barDemo">
+    <!--<a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="edit">编辑</a>-->
+    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+</script>
+<script>
+    var layer, table, element, laydate, form;
+    var t = [
+        /*{type: 'checkbox', fixed: 'left'}*/
+        , {field: 'id', title: 'ID', sort: true, hide: true,}
+        , {field: 'content', title: '内容', sort: true,}
+        , {field: 'resourceId', title: '资源ID', sort: true,}
+        , {field: 'userId', title: '用户ID', sort: true,}
+        , {fixed: 'right', width: 150, align: 'center', toolbar: '#barDemo'}
+    ];
+    layui.use(['laydate', 'laypage', 'layer', 'table', 'element', 'form'], function () {
+        layer = layui.layer //弹层
+            , table = layui.table //表格
+            , element = layui.element //元素操作
+            , laydate = layui.laydate
+            , form = layui.form
+
+        //监听行工具事件
+        table.on('tool(test)', function (obj) { //注：tool 是工具条事件名，test 是 table 原始容器的属性 lay-filter="对应的值"
+            data = obj.data //获得当前行数据
+                , layEvent = obj.event; //获得 lay-event 对应的值
+
+            // 获取CSRF Token
+            let csrfToken = $("meta[name='_csrf']").attr("content");
+            let csrfHeader = $("meta[name='_csrf_header']").attr("content");
+            if (layEvent === 'edit') {
+            } else if (layEvent === 'del') {
+                layer.confirm('真的删除这个评论吗？', function (index) {
+                    $.ajax({
+                        url: "/api/comment/" + obj.data.id,
+                        type: 'delete',
+                        async: true,
+                        dataType: 'json',
+                        beforeSend: function (request) {
+                            request.setRequestHeader(csrfHeader, csrfToken); // 添加CSRF Token
+                        }
+                    })
+                        .then(function (res) {
+                            obj.del(); //删除对应行（tr）的DOM结构
+                            layui.use('layer', function () {
+                                var layer = layui.layer;
+                                layer.msg('删除成功', {offset: 'lb'});
+                            });
+                        })
+                        .fail(function () {
+                            layui.use(['layer'], function () {
+                                let layer = layui.layer;
+                                layer.msg("删除失败！");
+                            });
+                        })
+                    layer.close(index);
+                });
+            }
+        });
+        var app = new Vue({
+            el: '#app',
+            data: {
+                message: 'Hello Vue!',
+                resources: [],
+
+            },
+            watch: {},
+            created: function () {
+                self = this;
+                //执行一个 table 实例
+                table.render({
+                    elem: '#demo'
+                    , id: 'testReload'
+                    , url: '/api/comment/all'
+                    , title: '评论管理表'
+                    , page: true //开启分页
+                    /* , toolbar: 'default' //开启工具栏，此处显示默认图标，可以自定义模板，详见文档*/
+                    //, toolbar: true
+                    //, defaultToolbar: ['filter', 'print', 'exports']
+                    , cols: [t]
+                });
+            },
+            methods: {}
+        })
+    });
+
+
+</script>
+</html>

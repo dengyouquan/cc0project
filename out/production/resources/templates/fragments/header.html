@@ -9,35 +9,40 @@
     <title>Header</title>
 </head>
 <body>
-<div class="ui fixed inverted menu" data-th-fragment="header">
+<div class="ui inverted menu stackable container" data-th-fragment="header"
+     style="margin-left: 0%!important;margin-right: 0%!important;width: 100%!important;">
     <!--菜单-->
     <div class="ui simple dropdown item"><i class="content icon"></i>菜单
         <div class="menu">
             <div class="ui left pointing dropdown link item">声音
                 <div class="menu">
-                    <a class="item" href="/musics">音乐</a>
-                    <a class="item" href="/sounds">音效</a>
+                    <a class="item" href="/search/resource?type=music">音乐</a>
+                    <a class="item" href="/search/resource?type=sound">音效</a>
                 </div>
             </div>
-            <div class="ui left pointing dropdown link item">游戏
-                <div class="menu">
-                    <a class="item" href="/games/3d">3d</a>
-                    <a class="item" href="/games/2d">2d</a>
-                    <a class="item" href="/games/texture">贴图</a>
-                </div>
-            </div>
-            <a class="item" href="/images">图片</a>
-            <a class="item" href="/videos">视频</a>
-            <!--admin-->
-            <div sec:authorize ifAllGranted='ROLE_ADMIN'>
-                <a class="item" href="/users" th:action="@{/users}">控制台</a>
-            </div>
+            <a class="item" href="/search/resource?type=game">游戏素材</a>
+            <a class="item" href="/search/resource?type=picture">图片</a>
+            <a class="item" href="/search/resource?type=video">视频</a>
+            <a class="item" href="/search/resource?type=other">其他</a>
         </div>
     </div>
     <!--logo-->
     <a href="/index" class="header item">
         <img class="logo" src="/favicon.ico"> CC0资源
     </a>
+    <div sec:authorize="hasRole('ADMIN')" class="item right">
+        <div class="ui simple dropdown" style="padding-right: 20px">
+            控制台
+            <div class="menu">
+                <a sec:authorize="hasRole('ADMIN')" class="item" href="/admin/resource"
+                   th:action="@{/admin/resource}">资源审核</a>
+                <a sec:authorize="hasRole('ADMIN')" class="item" href="/admin/comment"
+                   th:action="@{/admin/comment}">评论管理</a>
+                <a sec:authorize="hasRole('ADMIN')" class="item" href="/admin/user"
+                   th:action="@{/admin/user}">用户管理</a>
+            </div>
+        </div>
+    </div>
     <div class="right menu">
         <!--<div class="item">
             <div class="ui transparent inverted icon input">
@@ -58,8 +63,12 @@
             <div class="ui simple dropdown" style="padding-right: 20px">
                 个人信息 <i class="dropdown icon"></i>
                 <div class="menu">
-                    <a class="item" href="/userspace" th:action="@{/userspace}">账号信息</a>
-                    <a class="item uploadcourse" href="/api/image/add" th:action="@{/api/image/add}">上传图片</a>
+                    <a class="item" href="/usermessage" th:action="@{/usermessage}">更改头像</a>
+                    <a class="item" href="/userspace" th:action="@{/userspace}">个人空间</a>
+                    <a class="item" href="/user/resource/management"
+                       th:action="@{/user/resource/management}">资源管理</a>
+                    <a class="item" href="/user/comment/management"
+                       th:action="@{/user/comment/management}">评论管理</a>
                     <a class="item uploadcourse" href="/api/resource/add" th:action="@{/api/resource/add}">上传资源</a>
                 </div>
             </div>
@@ -74,7 +83,7 @@
             <a class="ui primary button userlogin">登录 </a>
         </div>
         <div sec:authorize="isAnonymous()" class="item">
-            <a class="ui button userreg" href="/users/add">注册 </a>
+            <a class="ui button userreg" href="/login/reg">注册 </a>
         </div>
     </div>
 </div>

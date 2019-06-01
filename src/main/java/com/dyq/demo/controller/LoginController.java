@@ -256,7 +256,7 @@ public class LoginController {
         //得到请求参数
         String phone = httpServletRequest.getParameter("phone");
         //发送验证码
-        //smsSender.send(phone, phoneCode, VALID_MESSAGE_TIME_MINUTE);
+        smsSender.send(phone, phoneCode, VALID_MESSAGE_TIME_MINUTE);
         //设置验证参数
         httpServletRequest.getSession().setAttribute(phone + "result", false);
         httpServletRequest.getSession().setAttribute(phone, phoneCode);

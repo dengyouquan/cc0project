@@ -450,8 +450,8 @@ $(function(){
 		}
     });
 
-    $('#num').attr("value","dyq");
-    $('#pass').attr("value","123456");
-    $('#num2').attr("value","17729845523");
-    $('#veri-code').attr("value","111111");
+    //$('#num').attr("value","dyq");
+    //$('#pass').attr("value","123456");
+    //$('#num2').attr("value","17729845523");
+    //$('#veri-code').attr("value","111111");
 });

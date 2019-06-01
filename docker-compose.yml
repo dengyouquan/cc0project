@@ -1,0 +1,53 @@
+version: '2'
+services:
+  mysql:
+    restart: always
+    image: mysql:5.7
+    container_name: mysql
+    volumes:
+    - /d/docker_db/mysql/data:/var/lib/mysql
+    - /d/docker_db/mysql/conf:/etc/mysql/conf.d
+    command: mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci --init-connect='SET NAMES UTF8MB4;'
+    ports:
+    - "3306:3306"
+    environment:
+    - MYSQL_ROOT_PASSWORD=root
+  elasticsearch:
+    restart: always
+    image: itzg/elasticsearch:5.5.2
+    container_name: elasticsearch
+    volumes:
+    - /d/docker_db/elasticsearch/data:/data
+    - /d/docker_db/elasticsearch/conf:/conf
+    ports:
+    - "9200:9200"
+    - "9300:9300"
+  # 不能用127.0.0.1,用物理机ip
+  #extra_hosts向容器的 /etc/hosts 文件中添加一些记录:作用与 与 Docker client 的 --add-host 类似
+  #redis:
+  #  restart: always
+  #  image: redis:5.0.3
+  #  container_name: redis
+  #  ports:
+  #  - "6379:6379"
+  #zoo1:
+  #  image: zookeeper
+  #  restart: always
+  #  hostname: zoo1
+  #  ports:
+  #    - 2181:2181
+  #  environment:
+   #   ZOO_MY_ID: 1
+  # oracle:
+  #   image: wnameless/oracle-xe-11g
+  #   ports:
+  #     - 1521:1521
+  #     - 8085:8080
+  #   shm_size: 1g
+  #   volumes:
+  #     - /d/docker_db/oracle:/u01/app/oracle/oradata
+  #   environment:
+  #     - ORACLE_PWD=123456
+  #     - ORACLE_ALLOW_REMOTE=true
+  #   restart: always
+    
